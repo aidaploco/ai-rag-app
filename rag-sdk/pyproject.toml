@@ -27,3 +27,15 @@ tag_regex = "^rag-sdk-v(?P<version>.+)$"
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["rag_sdk*"]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.8",
+    "opentelemetry-sdk>=1.20",
+    "pytest>=7",
+    "pytest-asyncio>=0.23",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
