@@ -11,9 +11,11 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-azure = [
-    "azure-search-documents>=11.4",
+openai = [
     "openai>=1.0",
+]
+qdrant = [
+    "qdrant-client>=1.9",
 ]
 
 [build-system]
