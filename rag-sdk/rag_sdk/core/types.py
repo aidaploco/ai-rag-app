@@ -8,6 +8,4 @@ AsyncCallable: TypeAlias = Callable[P, Awaitable[R]]  # type: ignore[valid-type]
 
 
 class EncodeDecorator(Protocol[P, R]):  # type: ignore[misc]
-    def __call__(
-        self, fn: Callable[P, Awaitable[R]]
-    ) -> Callable[P, Awaitable[R]]: ...
+    def __call__(self, fn: Callable[P, Awaitable[R]]) -> Callable[P, Awaitable[R]]: ...

@@ -24,10 +24,7 @@ from rag_sdk.providers.base import (
 
 def _build_filter(filters: dict[str, Any]) -> Filter:
     return Filter(
-        must=[
-            FieldCondition(key=k, match=MatchValue(value=v))
-            for k, v in filters.items()
-        ]
+        must=[FieldCondition(key=k, match=MatchValue(value=v)) for k, v in filters.items()]
     )
 
 
@@ -47,9 +44,7 @@ class QdrantRetriever(Retriever):
         self._call_options = call_options or {}
 
     @trace()
-    async def retrieve(
-        self, query: str, filters: dict[str, Any] | None = None
-    ) -> SearchResults:
+    async def retrieve(self, query: str, filters: dict[str, Any] | None = None) -> SearchResults:
         query_vector = await self._embedder.embed(query)
         qdrant_filter = _build_filter(filters) if filters else None
         hits = await self._client.search(

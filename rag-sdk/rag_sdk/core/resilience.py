@@ -53,9 +53,7 @@ def with_retry(
 
         def _before_sleep(retry_state: tenacity.RetryCallState) -> None:
             exc = retry_state.outcome.exception() if retry_state.outcome else None
-            wait_secs = (
-                retry_state.next_action.sleep if retry_state.next_action else 0.0
-            )
+            wait_secs = retry_state.next_action.sleep if retry_state.next_action else 0.0
             ordinal = _inflect.ordinal(retry_state.attempt_number)
             logger.warning(
                 "%s: %s retry in %.1fs — %s",
@@ -72,9 +70,7 @@ def with_retry(
                 retry_after = _get_retry_after(exc)
                 if retry_after is not None:
                     return retry_after
-            return tenacity.wait_random_exponential(min=min_wait, max=max_wait)(
-                retry_state
-            )
+            return tenacity.wait_random_exponential(min=min_wait, max=max_wait)(retry_state)
 
         retrying = tenacity.AsyncRetrying(
             retry=tenacity.retry_if_exception_type(tuple(exception_types)),

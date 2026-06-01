@@ -82,9 +82,7 @@ def metered_throttled_function(
                     try:
                         return await fn(*args, **kwargs)
                     finally:
-                        duration_histogram.record(
-                            (time.monotonic() - start) * 1000
-                        )
+                        duration_histogram.record((time.monotonic() - start) * 1000)
                         running_counter.add(-1)
                         async with condition:
                             condition.notify_all()

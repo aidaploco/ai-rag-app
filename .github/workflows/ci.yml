@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: uv sync --frozen
+
+      - name: Check formatting
+        run: uv run ruff format --check rag-sdk/rag_sdk app/rag_app
+
+      - name: Check linting
+        run: uv run ruff check rag-sdk/rag_sdk app/rag_app
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    env:
+      OPENAI_API_KEY: test-key-ci
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: uv sync --frozen
+
+      - name: Run SDK tests
+        run: uv run pytest rag-sdk/tests --tb=short --cov=rag-sdk/rag_sdk --cov-report=xml:rag-sdk-coverage.xml
+
+      - name: Run app tests
+        run: uv run pytest app/tests --tb=short --cov=app/rag_app --cov-report=xml:app-coverage.xml
+
+      - name: Upload SDK coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: rag-sdk-coverage.xml
+
+      - name: Upload app coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: app-coverage.xml
+
+  docker:
+    name: Docker Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false

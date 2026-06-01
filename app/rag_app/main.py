@@ -4,7 +4,6 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from openai import AsyncOpenAI
 from qdrant_client import AsyncQdrantClient
-
 from rag_sdk.providers.openai import OpenAIChatter, OpenAIEmbedder
 from rag_sdk.providers.qdrant import QdrantIndexer
 from rag_sdk.workflow.ingestion import IngestionWorkflow
@@ -50,9 +49,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         chatter=chatter,
     )
 
-    app.state.ingestion_service = IngestionService(
-        workflow=ingestion_workflow, indexer=indexer
-    )
+    app.state.ingestion_service = IngestionService(workflow=ingestion_workflow, indexer=indexer)
     app.state.rag_service = RagService(workflow=rag_workflow)
 
     await ingestion_workflow.ensure_index_exists()

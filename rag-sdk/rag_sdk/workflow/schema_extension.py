@@ -12,6 +12,7 @@ TContext = TypeVar("TContext")
 def content_id_for(text: str) -> str:
     return str(uuid.uuid5(uuid.NAMESPACE_OID, text))
 
+
 # Keep base fields on scalar conflict — extensions can add but not overwrite
 # content_id, content, or content_vector.
 _document_merger = Merger(
@@ -26,9 +27,7 @@ class RagSchemaExtension(Generic[TContext], ABC):
     def get_schema_extension(self) -> Schema: ...
 
     @abstractmethod
-    def get_document_extension(
-        self, content: str, context: TContext
-    ) -> dict[str, Any]: ...
+    def get_document_extension(self, content: str, context: TContext) -> dict[str, Any]: ...
 
 
 class DocumentProcessor(Generic[TContext]):

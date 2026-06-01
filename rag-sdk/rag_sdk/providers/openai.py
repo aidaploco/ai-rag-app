@@ -43,9 +43,7 @@ class OpenAIEmbedder(Embedder):
 
     @trace()
     @with_retry(RateLimitError)
-    async def embed_chunks(
-        self, texts: list[str], batch_size: int = 2048
-    ) -> list[list[float]]:
+    async def embed_chunks(self, texts: list[str], batch_size: int = 2048) -> list[list[float]]:
         async def _embed_batch(batch: list[str]) -> list[list[float]]:
             response = await self._client.embeddings.create(
                 model=self._model,
