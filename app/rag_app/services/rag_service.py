@@ -10,13 +10,4 @@ class RagService:
     async def answer(
         self, query: str, filters: dict[str, Any] | None = None
     ) -> RagResult:
-        return await self._workflow.rag(
-            query=query,
-            user_template="Question: {question}",
-            system_template=(
-                "You are a helpful assistant. "
-                "Answer questions based only on the provided context.\n\n"
-                "Context:\n{context}"
-            ),
-            filters=filters,
-        )
+        return await self._workflow.rag(query=query, filters=filters)

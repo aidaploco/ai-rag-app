@@ -75,14 +75,10 @@ class QdrantIndexer(Indexer):
         client: AsyncQdrantClient,
         embedder: Embedder,
         collection: str,
-        top_k: int = 5,
-        call_options: dict[str, Any] | None = None,
     ) -> None:
         self._client = client
         self._embedder = embedder
         self._collection = collection
-        self._top_k = top_k
-        self._call_options = call_options or {}
 
     @trace()
     async def create_or_update_index(self, name: str, schema: Schema) -> None:
@@ -139,10 +135,16 @@ class QdrantIndexer(Indexer):
         )
         return {str(r.id) for r in results}
 
-    def create_searcher(self, index: str) -> Retriever:
+    def create_searcher(
+        self,
+        index: str,
+        top_k: int = 5,
+        call_options: dict[str, Any] | None = None,
+    ) -> Retriever:
         return QdrantRetriever(
             client=self._client,
             collection=index,
             embedder=self._embedder,
-            top_k=self._top_k,
+            top_k=top_k,
+            call_options=call_options,
         )

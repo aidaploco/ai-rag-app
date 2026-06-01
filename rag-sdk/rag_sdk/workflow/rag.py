@@ -21,8 +21,12 @@ class RagWorkflow:
     async def rag(
         self,
         query: str,
-        user_template: LiteralString,
-        system_template: LiteralString,
+        user_template: LiteralString = "Question: {question}",
+        system_template: LiteralString = (
+            "You are a helpful assistant. "
+            "Answer questions based only on the provided context.\n\n"
+            "Context:\n{context}"
+        ),
         filters: dict[str, Any] | None = None,
     ) -> RagResult:
         results = await self._retriever.retrieve(query, filters)

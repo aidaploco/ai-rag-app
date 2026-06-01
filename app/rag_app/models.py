@@ -1,6 +1,6 @@
 from typing import Any
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class IngestResponse(BaseModel):
@@ -14,12 +14,16 @@ class GenerateRequest(BaseModel):
 
 
 class SearchResultModel(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     content: str
     score: float
     metadata: dict[str, Any]
 
 
 class TokenUsageModel(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     prompt_tokens: int
     completion_tokens: int
     total_tokens: int

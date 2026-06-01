@@ -26,11 +26,6 @@ async def e2e(
 
     return E2EResponse(
         response=result.response,
-        context=[
-            SearchResultModel(
-                content=r.content, score=r.score, metadata=r.metadata
-            )
-            for r in result.context
-        ],
+        context=[SearchResultModel.model_validate(r) for r in result.context],
         pages_ingested=ingested,
     )
