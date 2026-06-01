@@ -1,3 +1,4 @@
+import asyncio
 from typing import Any
 
 from openai import AsyncOpenAI, RateLimitError
@@ -45,19 +46,17 @@ class OpenAIEmbedder(Embedder):
     async def embed_chunks(
         self, texts: list[str], batch_size: int = 2048
     ) -> list[list[float]]:
-        all_embeddings: list[list[float]] = []
-        for i in range(0, len(texts), batch_size):
-            batch = texts[i : i + batch_size]
+        async def _embed_batch(batch: list[str]) -> list[list[float]]:
             response = await self._client.embeddings.create(
                 model=self._model,
                 input=batch,
                 **self._call_options,
             )
-            all_embeddings.extend(
-                item.embedding
-                for item in sorted(response.data, key=lambda x: x.index)
-            )
-        return all_embeddings
+            return [item.embedding for item in response.data]
+
+        batches = [texts[i : i + batch_size] for i in range(0, len(texts), batch_size)]
+        results = await asyncio.gather(*[_embed_batch(b) for b in batches])
+        return [emb for batch_result in results for emb in batch_result]
 
 
 class OpenAIChatter(Chatter):

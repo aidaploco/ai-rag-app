@@ -21,9 +21,7 @@ class StubEmbedder(Embedder):
 
 def _mock_qdrant() -> MagicMock:
     client = MagicMock()
-    collections = MagicMock()
-    collections.collections = []
-    client.get_collections = AsyncMock(return_value=collections)
+    client.collection_exists = AsyncMock(return_value=False)
     client.create_collection = AsyncMock()
     client.upsert = AsyncMock()
     client.search = AsyncMock(return_value=[])
@@ -54,9 +52,7 @@ async def test_create_or_update_index_creates_collection():
 
 async def test_create_or_update_index_skips_existing():
     client = _mock_qdrant()
-    existing = MagicMock()
-    existing.name = "col"
-    client.get_collections.return_value.collections = [existing]
+    client.collection_exists = AsyncMock(return_value=True)
     indexer = QdrantIndexer(client=client, embedder=StubEmbedder(), collection="col")
     await indexer.create_or_update_index("col", {})
     client.create_collection.assert_not_called()

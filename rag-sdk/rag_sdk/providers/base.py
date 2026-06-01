@@ -81,5 +81,12 @@ class Indexer(ABC):
     @abstractmethod
     async def count_documents(self, filter: dict[str, Any]) -> int: ...
 
+    async def existing_content_ids(self, content_ids: list[str]) -> set[str]:
+        result = set()
+        for cid in content_ids:
+            if await self.has_document({"content_id": cid}):
+                result.add(cid)
+        return result
+
     @abstractmethod
     def create_searcher(self, index: str) -> Retriever: ...

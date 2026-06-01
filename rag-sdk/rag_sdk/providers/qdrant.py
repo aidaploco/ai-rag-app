@@ -86,9 +86,7 @@ class QdrantIndexer(Indexer):
 
     @trace()
     async def create_or_update_index(self, name: str, schema: Schema) -> None:
-        response = await self._client.get_collections()
-        existing = {c.name for c in response.collections}
-        if name not in existing:
+        if not await self._client.collection_exists(name):
             await self._client.create_collection(
                 collection_name=name,
                 vectors_config=VectorParams(
@@ -133,6 +131,13 @@ class QdrantIndexer(Indexer):
             count_filter=_build_filter(filter),
         )
         return result.count
+
+    async def existing_content_ids(self, content_ids: list[str]) -> set[str]:
+        results = await self._client.retrieve(
+            collection_name=self._collection,
+            ids=content_ids,
+        )
+        return {str(r.id) for r in results}
 
     def create_searcher(self, index: str) -> Retriever:
         return QdrantRetriever(

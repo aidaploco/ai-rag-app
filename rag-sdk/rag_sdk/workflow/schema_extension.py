@@ -8,6 +8,10 @@ from rag_sdk.providers.base import Document, Schema
 
 TContext = TypeVar("TContext")
 
+
+def content_id_for(text: str) -> str:
+    return str(uuid.uuid5(uuid.NAMESPACE_OID, text))
+
 # Keep base fields on scalar conflict — extensions can add but not overwrite
 # content_id, content, or content_vector.
 _document_merger = Merger(
@@ -38,7 +42,7 @@ class DocumentProcessor(Generic[TContext]):
         context: TContext,
         page_nr: int,
     ) -> Document:
-        content_id = str(uuid.uuid5(uuid.NAMESPACE_OID, content))
+        content_id = content_id_for(content)
         base: dict[str, Any] = {
             "content_id": content_id,
             "content": content,
