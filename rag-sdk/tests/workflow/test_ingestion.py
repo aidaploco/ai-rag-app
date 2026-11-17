@@ -2,6 +2,7 @@ import uuid
 from dataclasses import dataclass
 from typing import Any
 
+import pytest
 from rag_sdk.providers.base import Documents, Embedder, Indexer, Retriever, Schema
 from rag_sdk.workflow.ingestion import IngestionWorkflow
 from rag_sdk.workflow.schema_extension import RagSchemaExtension
@@ -149,3 +150,48 @@ async def test_ingest_empty_pages_does_not_touch_indexer():
     docs = await _make_workflow(indexer).ingest(DocContext("a.pdf"), [])
     assert docs == []
     assert indexer.upload_calls == 0
+
+
+async def test_page_metadata_replaces_default_page_nr():
+    indexer = CapturingIndexer()
+    docs = await _make_workflow(indexer).ingest(
+        DocContext("a.pdf"),
+        ["p", "q"],
+        page_metadata=[{"chunk_idx": 7}, {"chunk_idx": 9, "page_nr": 3}],
+    )
+    assert docs[0].metadata == {"chunk_idx": 7, "source": "a.pdf"}
+    assert docs[1].metadata == {"chunk_idx": 9, "page_nr": 3, "source": "a.pdf"}
+
+
+async def test_page_metadata_cannot_be_overridden_by_extension():
+    class MetaExtension(RagSchemaExtension[DocContext]):
+        def get_schema_extension(self) -> Schema:
+            return {}
+
+        def get_document_extension(self, content: str, context: DocContext) -> dict[str, Any]:
+            return {"metadata": {"chunk_idx": 999}}
+
+    wf = IngestionWorkflow(
+        embedder=StubEmbedder(),
+        indexer=CapturingIndexer(),
+        index="i",
+        schema_extension=MetaExtension(),
+    )
+    docs = await wf.ingest(DocContext("x"), ["p"], page_metadata=[{"chunk_idx": 4}])
+    assert docs[0].metadata["chunk_idx"] == 4
+
+
+async def test_page_metadata_length_must_match_pages():
+    with pytest.raises(ValueError):
+        await _make_workflow(CapturingIndexer()).ingest(
+            DocContext("a"), ["p", "q"], page_metadata=[{}]
+        )
+
+
+async def test_page_metadata_is_copied_not_shared():
+    meta = {"chunk_idx": 0}
+    docs = await _make_workflow(CapturingIndexer()).ingest(
+        DocContext("a"), ["p"], page_metadata=[meta]
+    )
+    docs[0].metadata["x"] = 1
+    assert meta == {"chunk_idx": 0}

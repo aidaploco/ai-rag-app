@@ -1,6 +1,7 @@
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from io import BytesIO
+from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
@@ -8,6 +9,7 @@ from asgi_lifespan import LifespanManager
 from fastapi import FastAPI
 from httpx import ASGITransport, AsyncClient
 from rag_app.main import create_app
+from rag_app.parsing import MAX_UPLOAD_BYTES
 from rag_app.services.ingestion_service import IngestionService
 from rag_app.services.rag_service import RagService
 from rag_sdk.providers.base import SearchResult, TokenUsage
@@ -90,6 +92,48 @@ class TestIngestRoute:
             files={"file": ("bin.dat", BytesIO(b"\xff\xfe\x00bad"), "application/octet-stream")},
         )
         assert response.status_code == 415
+        ingestion_service.ingest_with_dedup.assert_not_awaited()
+
+    async def test_pdf_upload_passes_real_page_numbers(
+        self, client: AsyncClient, ingestion_service: IngestionService
+    ) -> None:
+        pdf = (Path(__file__).parent / "fixtures" / "two_page.pdf").read_bytes()
+        response = await client.post(
+            "/ingest", files={"file": ("two_page.pdf", BytesIO(pdf), "application/pdf")}
+        )
+        assert response.status_code == 200
+        pages = ingestion_service.ingest_with_dedup.await_args.args[1]
+        assert [(p.chunk_idx, p.page_nr) for p in pages] == [(0, 1), (1, 2)]
+
+    async def test_form_filename_extension_selects_the_parser(
+        self, client: AsyncClient, ingestion_service: IngestionService
+    ) -> None:
+        response = await client.post(
+            "/ingest",
+            files={"file": ("upload.bin", BytesIO(b"<p>hi there</p>"), "application/octet-stream")},
+            data={"filename": "page.html"},
+        )
+        assert response.status_code == 200
+        pages = ingestion_service.ingest_with_dedup.await_args.args[1]
+        assert [p.text for p in pages] == ["hi there"]
+
+    async def test_corrupt_pdf_returns_422(
+        self, client: AsyncClient, ingestion_service: IngestionService
+    ) -> None:
+        response = await client.post(
+            "/ingest", files={"file": ("x.pdf", BytesIO(b"not a pdf"), "application/pdf")}
+        )
+        assert response.status_code == 422
+        ingestion_service.ingest_with_dedup.assert_not_awaited()
+
+    async def test_oversized_upload_returns_413(
+        self, client: AsyncClient, ingestion_service: IngestionService
+    ) -> None:
+        big = b"a" * (MAX_UPLOAD_BYTES + 1)
+        response = await client.post(
+            "/ingest", files={"file": ("big.txt", BytesIO(big), "text/plain")}
+        )
+        assert response.status_code == 413
         ingestion_service.ingest_with_dedup.assert_not_awaited()
 
 
