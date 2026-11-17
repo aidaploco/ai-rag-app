@@ -72,6 +72,18 @@ class Retriever(ABC):
         ...
 
 
+class Reranker(ABC):
+    @abstractmethod
+    async def rerank(self, query: str, results: SearchResults, top_n: int) -> SearchResults:
+        """Reorder ``results`` by relevance to ``query`` and return at most ``top_n`` of them.
+
+        The output must be drawn only from ``results``, with nothing added or repeated. Each
+        result keeps the score it was retrieved with, so the returned list is ordered by the
+        reranker's judgement and is not necessarily sorted by ``score``.
+        """
+        ...
+
+
 class Indexer(ABC):
     @abstractmethod
     async def upload_documents(self, docs: Documents) -> None: ...

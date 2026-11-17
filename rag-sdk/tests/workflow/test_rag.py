@@ -123,3 +123,26 @@ async def test_rag_includes_token_usage_in_result():
     )
     result = await workflow.rag(query="q", user_template="{question}", system_template="{context}")
     assert result.token_usage.total_tokens == 15
+
+
+async def test_rag_with_reranking_retriever_reaches_chatter_in_reranked_order():
+    from rag_sdk.providers.base import Reranker
+    from rag_sdk.workflow.reranking import RerankingRetriever
+
+    class ReverseReranker(Reranker):
+        async def rerank(self, query: str, results: SearchResults, top_n: int) -> SearchResults:
+            return list(reversed(results))[:top_n]
+
+    chatter = CapturingChatter()
+    retriever = RerankingRetriever(
+        StubRetriever([_result("c1"), _result("c2"), _result("c3"), _result("c4")]),
+        ReverseReranker(),
+        retrieve_k=4,
+        top_n=2,
+    )
+    result = await RagWorkflow(retriever=retriever, chatter=chatter).rag(
+        query="q", user_template="{question}", system_template="{context}"
+    )
+    assert chatter.last_prompt is not None
+    assert chatter.last_prompt.system == "c4\n\nc3"
+    assert [r.content for r in result.context] == ["c4", "c3"]

@@ -13,6 +13,10 @@ A small, synthetic benchmark for comparing retrieval changes (reranking, hybrid 
   deletes the collection. It never reads `.env`, never sends a Qdrant API key, and refuses to use
   a collection name that already exists.
 - `results/dense_baseline.json`: the recorded dense-only baseline (see below).
+- `run_rerank_eval.py`: runs dense and dense + `LLMReranker` on one scratch collection with cached
+  query embeddings. It first checks the dense arm reproduces `dense_baseline.json` per query and
+  aborts if not. The rerank arm runs several times (LLM output varies); the spread, token cost,
+  latency, fallback count and per-query rank movement go to `results/llm_rerank.json`.
 
 ```
 OPENAI_API_KEY=... uv run python app/eval/run_eval.py --qdrant-url http://localhost:6333
@@ -28,3 +32,16 @@ not by eyeballing the aggregates; with 27 queries, one query moving is about 0.0
 Caveats: `recall@1` cannot reach 1.0 for `multi` queries (three relevant each). `--dimensions` is
 not exposed because the embedder does not yet send `dimensions` to the API.
 The corpus is still small, so treat it as a regression check, not a benchmark.
+
+## Reading the rerank record
+
+`results/llm_rerank.json` holds `dense`, `rerank_overall_spread` (min/max/mean across runs), and
+per-run `movement_vs_dense` (queries improved / unchanged / worse by first-relevant rank), token
+counts, latency and `unparseable_replies_kept_original_order` (a fallback scores exactly like
+dense, so it must be zero to trust a run). A delta inside the run spread is noise.
+
+Limits: this measures *reordering* only. `retrieve_k=20` is a fifth of this corpus, so every
+relevant paragraph was already a candidate; it says nothing about candidate recall on a larger
+corpus. Token and latency figures are for one-sentence paragraphs and scale with chunk size times
+`retrieve_k`. After reranking almost no headroom is left here, so a later change (e.g. hybrid
+search) can only be judged against the dense arm, or on a larger, harder corpus.
