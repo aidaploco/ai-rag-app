@@ -1,20 +1,23 @@
 """One behavioural contract, run against every vector-store provider.
 
-pgvector needs a real Postgres: set PGVECTOR_TEST_DSN to a *throwaway* database (the tests create
-and drop their own uniquely named tables, but never point this at data you care about). Without
-it the pgvector cases are skipped locally; in CI (CI=true) a missing DSN is a failure so the
-tests cannot silently stop running.
+pgvector needs a real Postgres (PGVECTOR_TEST_DSN) and OpenSearch a real node
+(OPENSEARCH_TEST_URL). Point them at *throwaway* instances only: the tests create and drop their
+own uniquely named tables/indexes. Without the variable the cases are skipped locally; in CI
+(CI=true) a missing one is a failure so the tests cannot silently stop running.
 """
 
 import hashlib
+import math
 import os
 import uuid
 from collections.abc import AsyncIterator
 
 import asyncpg
 import pytest
+from opensearchpy import AsyncOpenSearch
 from qdrant_client import AsyncQdrantClient
 from rag_sdk.providers.base import Document, Embedder, Indexer
+from rag_sdk.providers.opensearch import OpenSearchIndexer
 from rag_sdk.providers.pgvector import PgVectorIndexer
 from rag_sdk.providers.qdrant import QdrantIndexer
 from rag_sdk.workflow.schema_extension import content_id_for
@@ -48,7 +51,7 @@ async def make_docs(*items: tuple[str, dict]) -> list[Document]:
 Backend = tuple[Indexer, str]  # indexer, index name
 
 
-@pytest.fixture(params=["qdrant", "pgvector"])
+@pytest.fixture(params=["qdrant", "pgvector", "opensearch"])
 async def backend(request: pytest.FixtureRequest) -> AsyncIterator[Backend]:
     name = f"contract_{uuid.uuid4().hex[:12]}"
     embedder = HashEmbedder()
@@ -58,6 +61,22 @@ async def backend(request: pytest.FixtureRequest) -> AsyncIterator[Backend]:
         await indexer.create_or_update_index(name, {})
         yield indexer, name
         await client.close()
+        return
+
+    if request.param == "opensearch":
+        url = os.environ.get("OPENSEARCH_TEST_URL")
+        if not url:
+            if os.environ.get("CI"):
+                pytest.fail("OPENSEARCH_TEST_URL is not set in CI; opensearch tests would not run")
+            pytest.skip("OPENSEARCH_TEST_URL not set")
+        os_client = AsyncOpenSearch(hosts=[url])
+        indexer = OpenSearchIndexer(os_client, embedder, name)
+        try:
+            await indexer.create_or_update_index(name, {})
+            yield indexer, name
+        finally:
+            await os_client.indices.delete(index=name, ignore_unavailable=True)
+            await os_client.close()
         return
 
     dsn = os.environ.get("PGVECTOR_TEST_DSN")
@@ -119,6 +138,25 @@ async def test_retrieve_ranks_exact_match_first_with_similarity_scores(backend: 
     assert results[0].score == pytest.approx(1.0, abs=1e-5)  # identical vector: cosine similarity
     assert [r.score for r in results] == sorted((r.score for r in results), reverse=True)
     assert results[0].metadata == {"n": 3, "filename": "f.txt"}  # payload minus content
+
+
+async def test_scores_equal_cosine_similarity_of_the_vectors(backend: Backend):
+    indexer, name = backend
+    texts = [f"passage {i}" for i in range(12)]
+    await indexer.upload_documents(await make_docs(*[(t, {}) for t in texts]))
+    embedder = HashEmbedder()
+    query = await embedder.embed("passage 4")
+
+    def cosine(a: list[float], b: list[float]) -> float:
+        dot = sum(x * y for x, y in zip(a, b))
+        return dot / (math.sqrt(sum(x * x for x in a)) * math.sqrt(sum(y * y for y in b)))
+
+    expected = {content_id_for(t): cosine(query, await embedder.embed(t)) for t in texts}
+    results = await indexer.create_searcher(name, top_k=12).retrieve("passage 4")
+    assert len(results) == 12
+    for r in results:
+        assert r.content_id is not None
+        assert r.score == pytest.approx(expected[r.content_id], abs=1e-4)
 
 
 async def test_top_k_argument_overrides_default(backend: Backend):
