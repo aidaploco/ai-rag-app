@@ -43,13 +43,15 @@ class DocumentProcessor(Generic[TContext]):
         content_vector: list[float],
         context: TContext,
         page_nr: int,
+        base_metadata: dict[str, Any] | None = None,
     ) -> Document:
+        """Build a Document. ``base_metadata``, when given, replaces the default ``page_nr``."""
         content_id = content_id_for(content)
         base: dict[str, Any] = {
             "content_id": content_id,
             "content": content,
             "content_vector": content_vector,
-            "metadata": {"page_nr": page_nr},
+            "metadata": dict(base_metadata) if base_metadata is not None else {"page_nr": page_nr},
         }
         extension = {
             k: v

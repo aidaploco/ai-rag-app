@@ -15,8 +15,9 @@ async def e2e(
     file: UploadFile = File(...),
     query: str = Form(...),
 ) -> E2EResponse:
-    pages = await read_pages(file)
-    context = DocumentContext(filename=file.filename or "unknown")
+    stored_name = file.filename or "unknown"
+    pages = await read_pages(file, stored_name)
+    context = DocumentContext(filename=stored_name)
 
     ingestion_service: IngestionService = request.app.state.ingestion_service
     rag_service: RagService = request.app.state.rag_service
