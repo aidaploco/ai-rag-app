@@ -1,0 +1,2214 @@
+{
+  "date": "2026-11-17",
+  "embedding_model": "text-embedding-3-small",
+  "documents": 5,
+  "paragraphs_per_document": 18,
+  "document_tokens": [
+    494,
+    464,
+    429,
+    458,
+    443
+  ],
+  "golden_queries": 27,
+  "retrieval_depth": 20,
+  "token_budgets": [
+    256,
+    512,
+    1024
+  ],
+  "openai_embedding_inputs": 210,
+  "arms": {
+    "paragraph_split (current default)": {
+      "chunks": 5,
+      "tokens_mean": 457.6,
+      "tokens_max": 494,
+      "anchors_cut_by_a_boundary": 0,
+      "anchors_total": 36,
+      "overall": {
+        "anchor_recall_at_budget": {
+          "256": 0.0,
+          "512": 0.4938,
+          "1024": 0.8272
+        },
+        "mrr": 0.7253
+      },
+      "by_kind": {
+        "identifier": {
+          "anchor_recall_at_budget": {
+            "256": 0.0,
+            "512": 0.1111,
+            "1024": 0.6667
+          },
+          "mrr": 0.4722
+        },
+        "multi": {
+          "anchor_recall_at_budget": {
+            "256": 0.0,
+            "512": 0.8889,
+            "1024": 0.8889
+          },
+          "mrr": 1.0
+        },
+        "paraphrase": {
+          "anchor_recall_at_budget": {
+            "256": 0.0,
+            "512": 0.5833,
+            "1024": 0.9167
+          },
+          "mrr": 0.7778
+        }
+      },
+      "per_query": [
+        {
+          "query": "How often should I clean limescale out of my coffee maker?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What does it mean when there is a grey liquid pooling on top of my dough culture?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "Why shouldn't I leave my phone plugged in until it hits 100 percent all the time?",
+          "kind": "paraphrase",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 0.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "My e-bike power pack looks puffy, is it safe to keep using?",
+          "kind": "paraphrase",
+          "first_hit_rank": 3,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 0.0,
+            "1024": 0.0
+          }
+        },
+        {
+          "query": "How do I know when the bees' nectar is dry enough to harvest?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What causes a fish tank to build up poisonous waste early on?",
+          "kind": "paraphrase",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 0.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "Do I owe the government instalments during the year if I work for myself?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What should I do about a plant whose bottom foliage is turning yellow?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "How can I stop my metal-cased keyboard from sounding hollow?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "When does my bike transmission need a new loop?",
+          "kind": "paraphrase",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 0.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What's the penalty when a box sits too long at the port?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "Which way should rooftop photovoltaics point?",
+          "kind": "paraphrase",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 0.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "E-4471",
+          "kind": "identifier",
+          "first_hit_rank": 4,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 0.0,
+            "1024": 0.0
+          }
+        },
+        {
+          "query": "What is BL-77302?",
+          "kind": "identifier",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 0.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "HT-2208 use",
+          "kind": "identifier",
+          "first_hit_rank": 4,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 0.0,
+            "1024": 0.0
+          }
+        },
+        {
+          "query": "BMS-3.2.1 changes",
+          "kind": "identifier",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 0.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "TK-4410",
+          "kind": "identifier",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 0.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "KB-RESET-09",
+          "kind": "identifier",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 0.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "F-2043 fault",
+          "kind": "identifier",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 0.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "CT-1187",
+          "kind": "identifier",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "GT-5530",
+          "kind": "identifier",
+          "first_hit_rank": 4,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 0.0,
+            "1024": 0.0
+          }
+        },
+        {
+          "query": "How can a lithium battery be damaged by poor charging or storage habits?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 0.6667,
+            "1024": 0.6667
+          }
+        },
+        {
+          "query": "What goes into maintaining an espresso machine?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "How do I get a good sourdough crust and crumb?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What are the steps to keep a new aquarium's water safe for fish?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 0.6667,
+            "1024": 0.6667
+          }
+        },
+        {
+          "query": "What are the deadlines and record-keeping duties for freelancers?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What keeps a beehive healthy through the year?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        }
+      ]
+    },
+    "fixed_64": {
+      "chunks": 38,
+      "tokens_mean": 60.5,
+      "tokens_max": 66,
+      "anchors_cut_by_a_boundary": 1,
+      "anchors_total": 36,
+      "overall": {
+        "anchor_recall_at_budget": {
+          "256": 0.8395,
+          "512": 0.9506,
+          "1024": 0.9877
+        },
+        "mrr": 0.7167
+      },
+      "by_kind": {
+        "identifier": {
+          "anchor_recall_at_budget": {
+            "256": 0.7778,
+            "512": 0.8889,
+            "1024": 1.0
+          },
+          "mrr": 0.5323
+        },
+        "multi": {
+          "anchor_recall_at_budget": {
+            "256": 0.7778,
+            "512": 0.9444,
+            "1024": 0.9444
+          },
+          "mrr": 1.0
+        },
+        "paraphrase": {
+          "anchor_recall_at_budget": {
+            "256": 0.9167,
+            "512": 1.0,
+            "1024": 1.0
+          },
+          "mrr": 0.7133
+        }
+      },
+      "per_query": [
+        {
+          "query": "How often should I clean limescale out of my coffee maker?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What does it mean when there is a grey liquid pooling on top of my dough culture?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "Why shouldn't I leave my phone plugged in until it hits 100 percent all the time?",
+          "kind": "paraphrase",
+          "first_hit_rank": 4,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "My e-bike power pack looks puffy, is it safe to keep using?",
+          "kind": "paraphrase",
+          "first_hit_rank": 3,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "How do I know when the bees' nectar is dry enough to harvest?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What causes a fish tank to build up poisonous waste early on?",
+          "kind": "paraphrase",
+          "first_hit_rank": 7,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "Do I owe the government instalments during the year if I work for myself?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What should I do about a plant whose bottom foliage is turning yellow?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "How can I stop my metal-cased keyboard from sounding hollow?",
+          "kind": "paraphrase",
+          "first_hit_rank": 3,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "When does my bike transmission need a new loop?",
+          "kind": "paraphrase",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What's the penalty when a box sits too long at the port?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "Which way should rooftop photovoltaics point?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "E-4471",
+          "kind": "identifier",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What is BL-77302?",
+          "kind": "identifier",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "HT-2208 use",
+          "kind": "identifier",
+          "first_hit_rank": 5,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "BMS-3.2.1 changes",
+          "kind": "identifier",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "TK-4410",
+          "kind": "identifier",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "KB-RESET-09",
+          "kind": "identifier",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "F-2043 fault",
+          "kind": "identifier",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "CT-1187",
+          "kind": "identifier",
+          "first_hit_rank": 11,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 0.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "GT-5530",
+          "kind": "identifier",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "How can a lithium battery be damaged by poor charging or storage habits?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What goes into maintaining an espresso machine?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "How do I get a good sourdough crust and crumb?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 0.6667,
+            "512": 0.6667,
+            "1024": 0.6667
+          }
+        },
+        {
+          "query": "What are the steps to keep a new aquarium's water safe for fish?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 0.6667,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What are the deadlines and record-keeping duties for freelancers?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What keeps a beehive healthy through the year?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 0.3333,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        }
+      ]
+    },
+    "fixed_128": {
+      "chunks": 20,
+      "tokens_mean": 114.7,
+      "tokens_max": 129,
+      "anchors_cut_by_a_boundary": 0,
+      "anchors_total": 36,
+      "overall": {
+        "anchor_recall_at_budget": {
+          "256": 0.6543,
+          "512": 0.9259,
+          "1024": 0.9259
+        },
+        "mrr": 0.6807
+      },
+      "by_kind": {
+        "identifier": {
+          "anchor_recall_at_budget": {
+            "256": 0.3333,
+            "512": 0.7778,
+            "1024": 0.7778
+          },
+          "mrr": 0.3846
+        },
+        "multi": {
+          "anchor_recall_at_budget": {
+            "256": 0.9444,
+            "512": 1.0,
+            "1024": 1.0
+          },
+          "mrr": 1.0
+        },
+        "paraphrase": {
+          "anchor_recall_at_budget": {
+            "256": 0.75,
+            "512": 1.0,
+            "1024": 1.0
+          },
+          "mrr": 0.7431
+        }
+      },
+      "per_query": [
+        {
+          "query": "How often should I clean limescale out of my coffee maker?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What does it mean when there is a grey liquid pooling on top of my dough culture?",
+          "kind": "paraphrase",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "Why shouldn't I leave my phone plugged in until it hits 100 percent all the time?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "My e-bike power pack looks puffy, is it safe to keep using?",
+          "kind": "paraphrase",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "How do I know when the bees' nectar is dry enough to harvest?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What causes a fish tank to build up poisonous waste early on?",
+          "kind": "paraphrase",
+          "first_hit_rank": 3,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "Do I owe the government instalments during the year if I work for myself?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What should I do about a plant whose bottom foliage is turning yellow?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "How can I stop my metal-cased keyboard from sounding hollow?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "When does my bike transmission need a new loop?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What's the penalty when a box sits too long at the port?",
+          "kind": "paraphrase",
+          "first_hit_rank": 4,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "Which way should rooftop photovoltaics point?",
+          "kind": "paraphrase",
+          "first_hit_rank": 3,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "E-4471",
+          "kind": "identifier",
+          "first_hit_rank": 3,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What is BL-77302?",
+          "kind": "identifier",
+          "first_hit_rank": 3,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "HT-2208 use",
+          "kind": "identifier",
+          "first_hit_rank": 10,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 0.0,
+            "1024": 0.0
+          }
+        },
+        {
+          "query": "BMS-3.2.1 changes",
+          "kind": "identifier",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "TK-4410",
+          "kind": "identifier",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "KB-RESET-09",
+          "kind": "identifier",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "F-2043 fault",
+          "kind": "identifier",
+          "first_hit_rank": 3,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "CT-1187",
+          "kind": "identifier",
+          "first_hit_rank": 9,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 0.0,
+            "1024": 0.0
+          }
+        },
+        {
+          "query": "GT-5530",
+          "kind": "identifier",
+          "first_hit_rank": 4,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "How can a lithium battery be damaged by poor charging or storage habits?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What goes into maintaining an espresso machine?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "How do I get a good sourdough crust and crumb?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What are the steps to keep a new aquarium's water safe for fish?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 0.6667,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What are the deadlines and record-keeping duties for freelancers?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What keeps a beehive healthy through the year?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        }
+      ]
+    },
+    "recursive_64": {
+      "chunks": 45,
+      "tokens_mean": 51.0,
+      "tokens_max": 63,
+      "anchors_cut_by_a_boundary": 0,
+      "anchors_total": 36,
+      "overall": {
+        "anchor_recall_at_budget": {
+          "256": 0.9136,
+          "512": 0.963,
+          "1024": 1.0
+        },
+        "mrr": 0.6558
+      },
+      "by_kind": {
+        "identifier": {
+          "anchor_recall_at_budget": {
+            "256": 0.7778,
+            "512": 0.8889,
+            "1024": 1.0
+          },
+          "mrr": 0.4731
+        },
+        "multi": {
+          "anchor_recall_at_budget": {
+            "256": 0.9444,
+            "512": 1.0,
+            "1024": 1.0
+          },
+          "mrr": 0.8889
+        },
+        "paraphrase": {
+          "anchor_recall_at_budget": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          },
+          "mrr": 0.6764
+        }
+      },
+      "per_query": [
+        {
+          "query": "How often should I clean limescale out of my coffee maker?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What does it mean when there is a grey liquid pooling on top of my dough culture?",
+          "kind": "paraphrase",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "Why shouldn't I leave my phone plugged in until it hits 100 percent all the time?",
+          "kind": "paraphrase",
+          "first_hit_rank": 3,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "My e-bike power pack looks puffy, is it safe to keep using?",
+          "kind": "paraphrase",
+          "first_hit_rank": 3,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "How do I know when the bees' nectar is dry enough to harvest?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What causes a fish tank to build up poisonous waste early on?",
+          "kind": "paraphrase",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "Do I owe the government instalments during the year if I work for myself?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What should I do about a plant whose bottom foliage is turning yellow?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "How can I stop my metal-cased keyboard from sounding hollow?",
+          "kind": "paraphrase",
+          "first_hit_rank": 4,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "When does my bike transmission need a new loop?",
+          "kind": "paraphrase",
+          "first_hit_rank": 5,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What's the penalty when a box sits too long at the port?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "Which way should rooftop photovoltaics point?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "E-4471",
+          "kind": "identifier",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What is BL-77302?",
+          "kind": "identifier",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "HT-2208 use",
+          "kind": "identifier",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "BMS-3.2.1 changes",
+          "kind": "identifier",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "TK-4410",
+          "kind": "identifier",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "KB-RESET-09",
+          "kind": "identifier",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "F-2043 fault",
+          "kind": "identifier",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "CT-1187",
+          "kind": "identifier",
+          "first_hit_rank": 6,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "GT-5530",
+          "kind": "identifier",
+          "first_hit_rank": 11,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 0.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "How can a lithium battery be damaged by poor charging or storage habits?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What goes into maintaining an espresso machine?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "How do I get a good sourdough crust and crumb?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What are the steps to keep a new aquarium's water safe for fish?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What are the deadlines and record-keeping duties for freelancers?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What keeps a beehive healthy through the year?",
+          "kind": "multi",
+          "first_hit_rank": 3,
+          "anchor_recall": {
+            "256": 0.6667,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        }
+      ]
+    },
+    "recursive_64_overlap32": {
+      "chunks": 81,
+      "tokens_mean": 51.0,
+      "tokens_max": 62,
+      "anchors_cut_by_a_boundary": 0,
+      "anchors_total": 36,
+      "overall": {
+        "anchor_recall_at_budget": {
+          "256": 0.9259,
+          "512": 0.963,
+          "1024": 1.0
+        },
+        "mrr": 0.7302
+      },
+      "by_kind": {
+        "identifier": {
+          "anchor_recall_at_budget": {
+            "256": 0.8889,
+            "512": 0.8889,
+            "1024": 1.0
+          },
+          "mrr": 0.4246
+        },
+        "multi": {
+          "anchor_recall_at_budget": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          },
+          "mrr": 1.0
+        },
+        "paraphrase": {
+          "anchor_recall_at_budget": {
+            "256": 0.9167,
+            "512": 1.0,
+            "1024": 1.0
+          },
+          "mrr": 0.8244
+        }
+      },
+      "per_query": [
+        {
+          "query": "How often should I clean limescale out of my coffee maker?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What does it mean when there is a grey liquid pooling on top of my dough culture?",
+          "kind": "paraphrase",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "Why shouldn't I leave my phone plugged in until it hits 100 percent all the time?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "My e-bike power pack looks puffy, is it safe to keep using?",
+          "kind": "paraphrase",
+          "first_hit_rank": 7,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "How do I know when the bees' nectar is dry enough to harvest?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What causes a fish tank to build up poisonous waste early on?",
+          "kind": "paraphrase",
+          "first_hit_rank": 4,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "Do I owe the government instalments during the year if I work for myself?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What should I do about a plant whose bottom foliage is turning yellow?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "How can I stop my metal-cased keyboard from sounding hollow?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "When does my bike transmission need a new loop?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What's the penalty when a box sits too long at the port?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "Which way should rooftop photovoltaics point?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "E-4471",
+          "kind": "identifier",
+          "first_hit_rank": 3,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What is BL-77302?",
+          "kind": "identifier",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "HT-2208 use",
+          "kind": "identifier",
+          "first_hit_rank": 4,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "BMS-3.2.1 changes",
+          "kind": "identifier",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "TK-4410",
+          "kind": "identifier",
+          "first_hit_rank": 3,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "KB-RESET-09",
+          "kind": "identifier",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "F-2043 fault",
+          "kind": "identifier",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "CT-1187",
+          "kind": "identifier",
+          "first_hit_rank": 14,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 0.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "GT-5530",
+          "kind": "identifier",
+          "first_hit_rank": 3,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "How can a lithium battery be damaged by poor charging or storage habits?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What goes into maintaining an espresso machine?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "How do I get a good sourdough crust and crumb?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What are the steps to keep a new aquarium's water safe for fish?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What are the deadlines and record-keeping duties for freelancers?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What keeps a beehive healthy through the year?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        }
+      ]
+    },
+    "recursive_128": {
+      "chunks": 21,
+      "tokens_mean": 109.1,
+      "tokens_max": 128,
+      "anchors_cut_by_a_boundary": 0,
+      "anchors_total": 36,
+      "overall": {
+        "anchor_recall_at_budget": {
+          "256": 0.6173,
+          "512": 0.8395,
+          "1024": 0.9259
+        },
+        "mrr": 0.6581
+      },
+      "by_kind": {
+        "identifier": {
+          "anchor_recall_at_budget": {
+            "256": 0.3333,
+            "512": 0.5556,
+            "1024": 0.7778
+          },
+          "mrr": 0.3502
+        },
+        "multi": {
+          "anchor_recall_at_budget": {
+            "256": 0.7778,
+            "512": 0.9444,
+            "1024": 1.0
+          },
+          "mrr": 0.8889
+        },
+        "paraphrase": {
+          "anchor_recall_at_budget": {
+            "256": 0.75,
+            "512": 1.0,
+            "1024": 1.0
+          },
+          "mrr": 0.7736
+        }
+      },
+      "per_query": [
+        {
+          "query": "How often should I clean limescale out of my coffee maker?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What does it mean when there is a grey liquid pooling on top of my dough culture?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "Why shouldn't I leave my phone plugged in until it hits 100 percent all the time?",
+          "kind": "paraphrase",
+          "first_hit_rank": 3,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "My e-bike power pack looks puffy, is it safe to keep using?",
+          "kind": "paraphrase",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "How do I know when the bees' nectar is dry enough to harvest?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What causes a fish tank to build up poisonous waste early on?",
+          "kind": "paraphrase",
+          "first_hit_rank": 5,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "Do I owe the government instalments during the year if I work for myself?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What should I do about a plant whose bottom foliage is turning yellow?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "How can I stop my metal-cased keyboard from sounding hollow?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "When does my bike transmission need a new loop?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What's the penalty when a box sits too long at the port?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "Which way should rooftop photovoltaics point?",
+          "kind": "paraphrase",
+          "first_hit_rank": 4,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "E-4471",
+          "kind": "identifier",
+          "first_hit_rank": 4,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What is BL-77302?",
+          "kind": "identifier",
+          "first_hit_rank": 5,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 0.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "HT-2208 use",
+          "kind": "identifier",
+          "first_hit_rank": 11,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 0.0,
+            "1024": 0.0
+          }
+        },
+        {
+          "query": "BMS-3.2.1 changes",
+          "kind": "identifier",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "TK-4410",
+          "kind": "identifier",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "KB-RESET-09",
+          "kind": "identifier",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "F-2043 fault",
+          "kind": "identifier",
+          "first_hit_rank": 3,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "CT-1187",
+          "kind": "identifier",
+          "first_hit_rank": 9,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 0.0,
+            "1024": 0.0
+          }
+        },
+        {
+          "query": "GT-5530",
+          "kind": "identifier",
+          "first_hit_rank": 6,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 0.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "How can a lithium battery be damaged by poor charging or storage habits?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What goes into maintaining an espresso machine?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "How do I get a good sourdough crust and crumb?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What are the steps to keep a new aquarium's water safe for fish?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 0.6667,
+            "512": 0.6667,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What are the deadlines and record-keeping duties for freelancers?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What keeps a beehive healthy through the year?",
+          "kind": "multi",
+          "first_hit_rank": 3,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        }
+      ]
+    },
+    "recursive_128_overlap64": {
+      "chunks": 34,
+      "tokens_mean": 111.4,
+      "tokens_max": 128,
+      "anchors_cut_by_a_boundary": 0,
+      "anchors_total": 36,
+      "overall": {
+        "anchor_recall_at_budget": {
+          "256": 0.6296,
+          "512": 0.8025,
+          "1024": 0.9506
+        },
+        "mrr": 0.663
+      },
+      "by_kind": {
+        "identifier": {
+          "anchor_recall_at_budget": {
+            "256": 0.2222,
+            "512": 0.5556,
+            "1024": 0.8889
+          },
+          "mrr": 0.2713
+        },
+        "multi": {
+          "anchor_recall_at_budget": {
+            "256": 0.8333,
+            "512": 0.9444,
+            "1024": 0.9444
+          },
+          "mrr": 0.9167
+        },
+        "paraphrase": {
+          "anchor_recall_at_budget": {
+            "256": 0.8333,
+            "512": 0.9167,
+            "1024": 1.0
+          },
+          "mrr": 0.8299
+        }
+      },
+      "per_query": [
+        {
+          "query": "How often should I clean limescale out of my coffee maker?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What does it mean when there is a grey liquid pooling on top of my dough culture?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "Why shouldn't I leave my phone plugged in until it hits 100 percent all the time?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "My e-bike power pack looks puffy, is it safe to keep using?",
+          "kind": "paraphrase",
+          "first_hit_rank": 3,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "How do I know when the bees' nectar is dry enough to harvest?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What causes a fish tank to build up poisonous waste early on?",
+          "kind": "paraphrase",
+          "first_hit_rank": 8,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 0.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "Do I owe the government instalments during the year if I work for myself?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What should I do about a plant whose bottom foliage is turning yellow?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "How can I stop my metal-cased keyboard from sounding hollow?",
+          "kind": "paraphrase",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "When does my bike transmission need a new loop?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What's the penalty when a box sits too long at the port?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "Which way should rooftop photovoltaics point?",
+          "kind": "paraphrase",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "E-4471",
+          "kind": "identifier",
+          "first_hit_rank": 3,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What is BL-77302?",
+          "kind": "identifier",
+          "first_hit_rank": 7,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 0.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "HT-2208 use",
+          "kind": "identifier",
+          "first_hit_rank": 16,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 0.0,
+            "1024": 0.0
+          }
+        },
+        {
+          "query": "BMS-3.2.1 changes",
+          "kind": "identifier",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "TK-4410",
+          "kind": "identifier",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "KB-RESET-09",
+          "kind": "identifier",
+          "first_hit_rank": 3,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "F-2043 fault",
+          "kind": "identifier",
+          "first_hit_rank": 3,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "CT-1187",
+          "kind": "identifier",
+          "first_hit_rank": 8,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 0.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "GT-5530",
+          "kind": "identifier",
+          "first_hit_rank": 9,
+          "anchor_recall": {
+            "256": 0.0,
+            "512": 0.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "How can a lithium battery be damaged by poor charging or storage habits?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 0.6667,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What goes into maintaining an espresso machine?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "How do I get a good sourdough crust and crumb?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What are the steps to keep a new aquarium's water safe for fish?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 0.6667,
+            "512": 0.6667,
+            "1024": 0.6667
+          }
+        },
+        {
+          "query": "What are the deadlines and record-keeping duties for freelancers?",
+          "kind": "multi",
+          "first_hit_rank": 1,
+          "anchor_recall": {
+            "256": 1.0,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        },
+        {
+          "query": "What keeps a beehive healthy through the year?",
+          "kind": "multi",
+          "first_hit_rank": 2,
+          "anchor_recall": {
+            "256": 0.6667,
+            "512": 1.0,
+            "1024": 1.0
+          }
+        }
+      ]
+    }
+  }
+}
