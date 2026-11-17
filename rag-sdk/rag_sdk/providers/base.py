@@ -27,6 +27,7 @@ class SearchResult:
     content: str
     score: float
     metadata: dict[str, Any]
+    content_id: str | None = None  # same ID the Document was indexed under, when the backend has it
 
 
 @dataclass
@@ -62,8 +63,13 @@ class Chatter(ABC):
 class Retriever(ABC):
     @abstractmethod
     async def retrieve(
-        self, query: str, filters: dict[str, Any] | None = None
-    ) -> SearchResults: ...
+        self,
+        query: str,
+        filters: dict[str, Any] | None = None,
+        top_k: int | None = None,
+    ) -> SearchResults:
+        """Return ranked results. ``top_k`` overrides the retriever's default result count."""
+        ...
 
 
 class Indexer(ABC):

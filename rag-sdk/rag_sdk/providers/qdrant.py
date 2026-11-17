@@ -44,13 +44,18 @@ class QdrantRetriever(Retriever):
         self._call_options = call_options or {}
 
     @trace()
-    async def retrieve(self, query: str, filters: dict[str, Any] | None = None) -> SearchResults:
+    async def retrieve(
+        self,
+        query: str,
+        filters: dict[str, Any] | None = None,
+        top_k: int | None = None,
+    ) -> SearchResults:
         query_vector = await self._embedder.embed(query)
         qdrant_filter = _build_filter(filters) if filters else None
         response = await self._client.query_points(
             collection_name=self._collection,
             query=query_vector,
-            limit=self._top_k,
+            limit=top_k if top_k is not None else self._top_k,
             query_filter=qdrant_filter,
             **self._call_options,
         )
@@ -59,6 +64,7 @@ class QdrantRetriever(Retriever):
                 content=(hit.payload or {}).get("content", ""),
                 score=hit.score,
                 metadata={k: v for k, v in (hit.payload or {}).items() if k != "content"},
+                content_id=str(hit.id),
             )
             for hit in response.points
         ]

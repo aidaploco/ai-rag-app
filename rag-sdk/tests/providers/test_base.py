@@ -63,7 +63,12 @@ class StubChatter(Chatter):
 
 
 class StubRetriever(Retriever):
-    async def retrieve(self, query: str, filters: dict[str, Any] | None = None) -> SearchResults:
+    async def retrieve(
+        self,
+        query: str,
+        filters: dict[str, Any] | None = None,
+        top_k: int | None = None,
+    ) -> SearchResults:
         return [SearchResult(content="stub result", score=0.9, metadata={})]
 
 

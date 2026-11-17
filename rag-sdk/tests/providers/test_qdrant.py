@@ -120,6 +120,7 @@ async def test_retriever_maps_hits_to_search_results():
     client = _mock_qdrant()
     hit = MagicMock()
     hit.score = 0.95
+    hit.id = "00000000-0000-0000-0000-000000000009"
     hit.payload = {"content": "relevant text", "page_nr": 1}
     client.query_points = AsyncMock(return_value=MagicMock(points=[hit]))
 
@@ -129,6 +130,7 @@ async def test_retriever_maps_hits_to_search_results():
     assert len(results) == 1
     assert results[0].content == "relevant text"
     assert results[0].score == 0.95
+    assert results[0].content_id == "00000000-0000-0000-0000-000000000009"
     assert results[0].metadata["page_nr"] == 1
     assert "content" not in results[0].metadata
 
@@ -155,6 +157,13 @@ async def test_retriever_queries_with_embedded_vector_and_top_k():
     assert kwargs["collection_name"] == "col"
     assert kwargs["query"] == [0.1, 0.2, 0.3]
     assert kwargs["limit"] == 7
+
+
+async def test_retriever_top_k_argument_overrides_default():
+    client = _mock_qdrant()
+    retriever = QdrantRetriever(client=client, collection="col", embedder=StubEmbedder(), top_k=5)
+    await retriever.retrieve("query", top_k=20)
+    assert client.query_points.call_args.kwargs["limit"] == 20
 
 
 async def test_retriever_passes_filter_to_search():
@@ -211,6 +220,8 @@ async def _roundtrip(client: AsyncQdrantClient, collection: str = "col") -> None
     retriever = indexer.create_searcher(collection, top_k=5)
     results = await retriever.retrieve("anything")
     assert {r.content for r in results} == {"alpha", "beta"}
+    assert {r.content_id for r in results} == {d.content_id for d in docs}
+    assert len(await retriever.retrieve("anything", top_k=1)) == 1
     assert all("content" not in r.metadata for r in results)
 
     filtered = await retriever.retrieve("anything", filters={"filename": "b.txt"})

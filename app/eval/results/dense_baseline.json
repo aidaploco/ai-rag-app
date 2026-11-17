@@ -1,0 +1,743 @@
+{
+  "date": "2026-11-17",
+  "retriever": "dense (QdrantRetriever, cosine)",
+  "embedding_model": "text-embedding-3-small",
+  "embedding_dimensions": 1536,
+  "qdrant_server_version": "1.18.1",
+  "corpus_paragraphs": 90,
+  "golden_queries": 27,
+  "openai_embedding_inputs": 117,
+  "queries_without_relevant_at_rank_1": 10,
+  "saturated_metrics": {
+    "overall": [
+      "recall@10"
+    ],
+    "identifier": [
+      "recall@10"
+    ],
+    "multi": [
+      "recall@5",
+      "recall@10"
+    ],
+    "paraphrase": [
+      "recall@3",
+      "recall@5",
+      "recall@10"
+    ]
+  },
+  "ks": [
+    1,
+    3,
+    5,
+    10
+  ],
+  "queries": 27,
+  "overall": {
+    "recall": {
+      "1": 0.5309,
+      "3": 0.9259,
+      "5": 0.963,
+      "10": 1.0
+    },
+    "mrr": {
+      "1": 0.6296,
+      "3": 0.784,
+      "5": 0.784,
+      "10": 0.7901
+    },
+    "ndcg": {
+      "1": 0.6296,
+      "3": 0.8141,
+      "5": 0.8366,
+      "10": 0.8498
+    }
+  },
+  "by_kind": {
+    "identifier": {
+      "queries": 9,
+      "recall": {
+        "1": 0.6667,
+        "3": 0.8889,
+        "5": 0.8889,
+        "10": 1.0
+      },
+      "mrr": {
+        "1": 0.6667,
+        "3": 0.7778,
+        "5": 0.7778,
+        "10": 0.7963
+      },
+      "ndcg": {
+        "1": 0.6667,
+        "3": 0.8069,
+        "5": 0.8069,
+        "10": 0.8465
+      }
+    },
+    "multi": {
+      "queries": 6,
+      "recall": {
+        "1": 0.2222,
+        "3": 0.8333,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "mrr": {
+        "1": 0.6667,
+        "3": 0.8333,
+        "5": 0.8333,
+        "10": 0.8333
+      },
+      "ndcg": {
+        "1": 0.6667,
+        "3": 0.8045,
+        "5": 0.9055,
+        "10": 0.9055
+      }
+    },
+    "paraphrase": {
+      "queries": 12,
+      "recall": {
+        "1": 0.5833,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "mrr": {
+        "1": 0.5833,
+        "3": 0.7639,
+        "5": 0.7639,
+        "10": 0.7639
+      },
+      "ndcg": {
+        "1": 0.5833,
+        "3": 0.8244,
+        "5": 0.8244,
+        "10": 0.8244
+      }
+    }
+  },
+  "per_query": [
+    {
+      "query": "How often should I clean limescale out of my coffee maker?",
+      "kind": "paraphrase",
+      "first_relevant_rank": 1,
+      "recall": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "mrr": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "ndcg": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      }
+    },
+    {
+      "query": "What does it mean when there is a grey liquid pooling on top of my dough culture?",
+      "kind": "paraphrase",
+      "first_relevant_rank": 2,
+      "recall": {
+        "1": 0.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "mrr": {
+        "1": 0.0,
+        "3": 0.5,
+        "5": 0.5,
+        "10": 0.5
+      },
+      "ndcg": {
+        "1": 0.0,
+        "3": 0.6309,
+        "5": 0.6309,
+        "10": 0.6309
+      }
+    },
+    {
+      "query": "Why shouldn't I leave my phone plugged in until it hits 100 percent all the time?",
+      "kind": "paraphrase",
+      "first_relevant_rank": 1,
+      "recall": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "mrr": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "ndcg": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      }
+    },
+    {
+      "query": "My e-bike power pack looks puffy, is it safe to keep using?",
+      "kind": "paraphrase",
+      "first_relevant_rank": 3,
+      "recall": {
+        "1": 0.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "mrr": {
+        "1": 0.0,
+        "3": 0.3333,
+        "5": 0.3333,
+        "10": 0.3333
+      },
+      "ndcg": {
+        "1": 0.0,
+        "3": 0.5,
+        "5": 0.5,
+        "10": 0.5
+      }
+    },
+    {
+      "query": "How do I know when the bees' nectar is dry enough to harvest?",
+      "kind": "paraphrase",
+      "first_relevant_rank": 1,
+      "recall": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "mrr": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "ndcg": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      }
+    },
+    {
+      "query": "What causes a fish tank to build up poisonous waste early on?",
+      "kind": "paraphrase",
+      "first_relevant_rank": 1,
+      "recall": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "mrr": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "ndcg": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      }
+    },
+    {
+      "query": "Do I owe the government instalments during the year if I work for myself?",
+      "kind": "paraphrase",
+      "first_relevant_rank": 2,
+      "recall": {
+        "1": 0.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "mrr": {
+        "1": 0.0,
+        "3": 0.5,
+        "5": 0.5,
+        "10": 0.5
+      },
+      "ndcg": {
+        "1": 0.0,
+        "3": 0.6309,
+        "5": 0.6309,
+        "10": 0.6309
+      }
+    },
+    {
+      "query": "What should I do about a plant whose bottom foliage is turning yellow?",
+      "kind": "paraphrase",
+      "first_relevant_rank": 1,
+      "recall": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "mrr": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "ndcg": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      }
+    },
+    {
+      "query": "How can I stop my metal-cased keyboard from sounding hollow?",
+      "kind": "paraphrase",
+      "first_relevant_rank": 3,
+      "recall": {
+        "1": 0.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "mrr": {
+        "1": 0.0,
+        "3": 0.3333,
+        "5": 0.3333,
+        "10": 0.3333
+      },
+      "ndcg": {
+        "1": 0.0,
+        "3": 0.5,
+        "5": 0.5,
+        "10": 0.5
+      }
+    },
+    {
+      "query": "When does my bike transmission need a new loop?",
+      "kind": "paraphrase",
+      "first_relevant_rank": 2,
+      "recall": {
+        "1": 0.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "mrr": {
+        "1": 0.0,
+        "3": 0.5,
+        "5": 0.5,
+        "10": 0.5
+      },
+      "ndcg": {
+        "1": 0.0,
+        "3": 0.6309,
+        "5": 0.6309,
+        "10": 0.6309
+      }
+    },
+    {
+      "query": "What's the penalty when a box sits too long at the port?",
+      "kind": "paraphrase",
+      "first_relevant_rank": 1,
+      "recall": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "mrr": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "ndcg": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      }
+    },
+    {
+      "query": "Which way should rooftop photovoltaics point?",
+      "kind": "paraphrase",
+      "first_relevant_rank": 1,
+      "recall": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "mrr": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "ndcg": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      }
+    },
+    {
+      "query": "E-4471",
+      "kind": "identifier",
+      "first_relevant_rank": 1,
+      "recall": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "mrr": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "ndcg": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      }
+    },
+    {
+      "query": "What is BL-77302?",
+      "kind": "identifier",
+      "first_relevant_rank": 1,
+      "recall": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "mrr": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "ndcg": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      }
+    },
+    {
+      "query": "HT-2208 use",
+      "kind": "identifier",
+      "first_relevant_rank": 1,
+      "recall": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "mrr": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "ndcg": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      }
+    },
+    {
+      "query": "BMS-3.2.1 changes",
+      "kind": "identifier",
+      "first_relevant_rank": 1,
+      "recall": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "mrr": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "ndcg": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      }
+    },
+    {
+      "query": "TK-4410",
+      "kind": "identifier",
+      "first_relevant_rank": 2,
+      "recall": {
+        "1": 0.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "mrr": {
+        "1": 0.0,
+        "3": 0.5,
+        "5": 0.5,
+        "10": 0.5
+      },
+      "ndcg": {
+        "1": 0.0,
+        "3": 0.6309,
+        "5": 0.6309,
+        "10": 0.6309
+      }
+    },
+    {
+      "query": "KB-RESET-09",
+      "kind": "identifier",
+      "first_relevant_rank": 1,
+      "recall": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "mrr": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "ndcg": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      }
+    },
+    {
+      "query": "F-2043 fault",
+      "kind": "identifier",
+      "first_relevant_rank": 1,
+      "recall": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "mrr": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "ndcg": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      }
+    },
+    {
+      "query": "CT-1187",
+      "kind": "identifier",
+      "first_relevant_rank": 6,
+      "recall": {
+        "1": 0.0,
+        "3": 0.0,
+        "5": 0.0,
+        "10": 1.0
+      },
+      "mrr": {
+        "1": 0.0,
+        "3": 0.0,
+        "5": 0.0,
+        "10": 0.1667
+      },
+      "ndcg": {
+        "1": 0.0,
+        "3": 0.0,
+        "5": 0.0,
+        "10": 0.3562
+      }
+    },
+    {
+      "query": "GT-5530",
+      "kind": "identifier",
+      "first_relevant_rank": 2,
+      "recall": {
+        "1": 0.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "mrr": {
+        "1": 0.0,
+        "3": 0.5,
+        "5": 0.5,
+        "10": 0.5
+      },
+      "ndcg": {
+        "1": 0.0,
+        "3": 0.6309,
+        "5": 0.6309,
+        "10": 0.6309
+      }
+    },
+    {
+      "query": "How can a lithium battery be damaged by poor charging or storage habits?",
+      "kind": "multi",
+      "first_relevant_rank": 1,
+      "recall": {
+        "1": 0.3333,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "mrr": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "ndcg": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      }
+    },
+    {
+      "query": "What goes into maintaining an espresso machine?",
+      "kind": "multi",
+      "first_relevant_rank": 1,
+      "recall": {
+        "1": 0.3333,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "mrr": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "ndcg": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      }
+    },
+    {
+      "query": "How do I get a good sourdough crust and crumb?",
+      "kind": "multi",
+      "first_relevant_rank": 1,
+      "recall": {
+        "1": 0.3333,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "mrr": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "ndcg": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      }
+    },
+    {
+      "query": "What are the steps to keep a new aquarium's water safe for fish?",
+      "kind": "multi",
+      "first_relevant_rank": 2,
+      "recall": {
+        "1": 0.0,
+        "3": 0.6667,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "mrr": {
+        "1": 0.0,
+        "3": 0.5,
+        "5": 0.5,
+        "10": 0.5
+      },
+      "ndcg": {
+        "1": 0.0,
+        "3": 0.5307,
+        "5": 0.7328,
+        "10": 0.7328
+      }
+    },
+    {
+      "query": "What are the deadlines and record-keeping duties for freelancers?",
+      "kind": "multi",
+      "first_relevant_rank": 1,
+      "recall": {
+        "1": 0.3333,
+        "3": 0.6667,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "mrr": {
+        "1": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "ndcg": {
+        "1": 1.0,
+        "3": 0.7654,
+        "5": 0.9675,
+        "10": 0.9675
+      }
+    },
+    {
+      "query": "What keeps a beehive healthy through the year?",
+      "kind": "multi",
+      "first_relevant_rank": 2,
+      "recall": {
+        "1": 0.0,
+        "3": 0.6667,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "mrr": {
+        "1": 0.0,
+        "3": 0.5,
+        "5": 0.5,
+        "10": 0.5
+      },
+      "ndcg": {
+        "1": 0.0,
+        "3": 0.5307,
+        "5": 0.7328,
+        "10": 0.7328
+      }
+    }
+  ]
+}

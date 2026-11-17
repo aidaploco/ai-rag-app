@@ -1,6 +1,11 @@
 from fastapi import HTTPException, UploadFile
 
 
+def split_pages(text: str) -> list[str]:
+    """Split text into paragraph "pages": blank-line separated, stripped, empties dropped."""
+    return [p.strip() for p in text.split("\n\n") if p.strip()]
+
+
 async def read_pages(file: UploadFile) -> list[str]:
     """Decode an uploaded text file and split it into paragraph "pages".
 
@@ -12,4 +17,4 @@ async def read_pages(file: UploadFile) -> list[str]:
         content = raw.decode("utf-8")
     except UnicodeDecodeError:
         raise HTTPException(status_code=415, detail="Only UTF-8 text files are supported") from None
-    return [p.strip() for p in content.split("\n\n") if p.strip()]
+    return split_pages(content)
