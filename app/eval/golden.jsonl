@@ -1,0 +1,27 @@
+{"query": "How often should I clean limescale out of my coffee maker?", "kind": "paraphrase", "relevant_anchors": ["Descale the boiler every three months"]}
+{"query": "What does it mean when there is a grey liquid pooling on top of my dough culture?", "kind": "paraphrase", "relevant_anchors": ["Hooch, the grey liquid"]}
+{"query": "Why shouldn't I leave my phone plugged in until it hits 100 percent all the time?", "kind": "paraphrase", "relevant_anchors": ["Lithium-ion cells last longest"]}
+{"query": "My e-bike power pack looks puffy, is it safe to keep using?", "kind": "paraphrase", "relevant_anchors": ["A swollen pouch cell"]}
+{"query": "How do I know when the bees' nectar is dry enough to harvest?", "kind": "paraphrase", "relevant_anchors": ["Honey is ready to extract"]}
+{"query": "What causes a fish tank to build up poisonous waste early on?", "kind": "paraphrase", "relevant_anchors": ["Cycling a new tank means"]}
+{"query": "Do I owe the government instalments during the year if I work for myself?", "kind": "paraphrase", "relevant_anchors": ["Quarterly estimated payments"]}
+{"query": "What should I do about a plant whose bottom foliage is turning yellow?", "kind": "paraphrase", "relevant_anchors": ["Yellowing lower leaves"]}
+{"query": "How can I stop my metal-cased keyboard from sounding hollow?", "kind": "paraphrase", "relevant_anchors": ["Foam placed between the plate"]}
+{"query": "When does my bike transmission need a new loop?", "kind": "paraphrase", "relevant_anchors": ["A chain stretched past 0.75 percent"]}
+{"query": "What's the penalty when a box sits too long at the port?", "kind": "paraphrase", "relevant_anchors": ["Demurrage charges accrue"]}
+{"query": "Which way should rooftop photovoltaics point?", "kind": "paraphrase", "relevant_anchors": ["Panels in the northern hemisphere"]}
+{"query": "E-4471", "kind": "identifier", "relevant_anchors": ["Error code E-4471"]}
+{"query": "What is BL-77302?", "kind": "identifier", "relevant_anchors": ["Bill of lading number BL-77302"]}
+{"query": "HT-2208 use", "kind": "identifier", "relevant_anchors": ["Hive tool model HT-2208"]}
+{"query": "BMS-3.2.1 changes", "kind": "identifier", "relevant_anchors": ["Battery management system firmware BMS-3.2.1"]}
+{"query": "TK-4410", "kind": "identifier", "relevant_anchors": ["Test kit reagent batch TK-4410"]}
+{"query": "KB-RESET-09", "kind": "identifier", "relevant_anchors": ["Firmware flag KB-RESET-09"]}
+{"query": "F-2043 fault", "kind": "identifier", "relevant_anchors": ["Inverter fault code F-2043"]}
+{"query": "CT-1187", "kind": "identifier", "relevant_anchors": ["Cassette lockring tool part CT-1187"]}
+{"query": "GT-5530", "kind": "identifier", "relevant_anchors": ["Gaiter model GT-5530"]}
+{"query": "How can a lithium battery be damaged by poor charging or storage habits?", "kind": "multi", "relevant_anchors": ["Lithium-ion cells last longest", "Charging below zero degrees", "For long storage, discharge a pack"]}
+{"query": "What goes into maintaining an espresso machine?", "kind": "multi", "relevant_anchors": ["Descale the boiler", "The portafilter gasket", "Backflush with a blind basket"]}
+{"query": "How do I get a good sourdough crust and crumb?", "kind": "multi", "relevant_anchors": ["Autolyse, resting flour", "Cold-proofing the shaped loaf", "Bake inside a preheated Dutch oven"]}
+{"query": "What are the steps to keep a new aquarium's water safe for fish?", "kind": "multi", "relevant_anchors": ["Cycling a new tank means", "Perform a weekly water change", "Overstocking produces more waste"]}
+{"query": "What are the deadlines and record-keeping duties for freelancers?", "kind": "multi", "relevant_anchors": ["Quarterly estimated payments", "Form 1099-NEC", "Keep receipts for business expenses"]}
+{"query": "What keeps a beehive healthy through the year?", "kind": "multi", "relevant_anchors": ["A healthy colony requires", "Varroa destructor mites", "Swarming peaks in late May"]}

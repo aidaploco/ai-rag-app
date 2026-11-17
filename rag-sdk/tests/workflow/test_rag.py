@@ -17,7 +17,12 @@ class StubRetriever(Retriever):
         self._results = results
         self.last_filters: dict[str, Any] | None = None
 
-    async def retrieve(self, query: str, filters: dict[str, Any] | None = None) -> SearchResults:
+    async def retrieve(
+        self,
+        query: str,
+        filters: dict[str, Any] | None = None,
+        top_k: int | None = None,
+    ) -> SearchResults:
         self.last_filters = filters
         return self._results
 
