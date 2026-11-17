@@ -1,2 +1,3 @@
 # ai-rag-app
-RAG app &amp; sdk
+
+RAG app & SDK.

@@ -7,15 +7,10 @@ from typing import ParamSpec, Protocol, TypeVar, cast
 from aiolimiter import AsyncLimiter
 from opentelemetry import metrics
 
+from rag_sdk.core.naming import metric_base
+
 P = ParamSpec("P")
 R = TypeVar("R")
-
-
-def _metric_base(fn: Callable) -> str:
-    # OTel names are capped at 63 chars; qualnames with <locals> can be arbitrarily long.
-    # Keep only the last two meaningful parts (skipping <locals>, <lambda>, etc.).
-    parts = [p for p in fn.__qualname__.split(".") if not p.startswith("<")]
-    return ".".join(parts[-2:] if len(parts) >= 2 else parts)
 
 
 class ThrottledCallable(Protocol[P, R]):  # type: ignore[misc]
@@ -54,7 +49,7 @@ def metered_throttled_function(
         limiter = AsyncLimiter(tps, 1)
         condition = asyncio.Condition()
 
-        fn_name = _metric_base(fn)
+        fn_name = metric_base(fn)
         waiting_counter = meter.create_up_down_counter(
             f"{fn_name}.waiting",
             description="Calls waiting for a throttle slot",

@@ -17,9 +17,12 @@ class IngestionService:
     async def ingest_with_dedup(
         self, context: DocumentContext, pages: list[str]
     ) -> tuple[int, int]:
-        all_ids = [content_id_for(p) for p in pages]
+        # Order-preserving in-batch dedup: identical paragraphs share one content ID, so
+        # embedding and counting them twice would be wasted work and an overstated total.
+        unique_pages = list(dict.fromkeys(pages))
+        all_ids = [content_id_for(p) for p in unique_pages]
         existing = await self._indexer.existing_content_ids(all_ids)
-        new_pages = [p for p, cid in zip(pages, all_ids) if cid not in existing]
+        new_pages = [p for p, cid in zip(unique_pages, all_ids) if cid not in existing]
 
         if new_pages:
             await self._workflow.ingest(context, new_pages)

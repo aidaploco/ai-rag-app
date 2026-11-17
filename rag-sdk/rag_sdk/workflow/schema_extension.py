@@ -13,8 +13,11 @@ def content_id_for(text: str) -> str:
     return str(uuid.uuid5(uuid.NAMESPACE_OID, text))
 
 
-# Keep base fields on scalar conflict — extensions can add but not overwrite
-# content_id, content, or content_vector.
+# Fields the SDK owns. Extensions may add metadata but never touch these (a list-valued
+# content_vector would otherwise be *appended* to by the merger below).
+_PROTECTED_FIELDS = frozenset({"content_id", "content", "content_vector"})
+
+# Keep base values on scalar conflict, so extension metadata cannot overwrite page_nr.
 _document_merger = Merger(
     [(list, ["append"]), (dict, ["merge"]), (set, ["union"])],
     ["use_existing"],
@@ -48,7 +51,11 @@ class DocumentProcessor(Generic[TContext]):
             "content_vector": content_vector,
             "metadata": {"page_nr": page_nr},
         }
-        extension = self._extension.get_document_extension(content, context)
+        extension = {
+            k: v
+            for k, v in self._extension.get_document_extension(content, context).items()
+            if k not in _PROTECTED_FIELDS
+        }
         merged = _document_merger.merge(base, extension)
         return Document(
             content_id=merged["content_id"],

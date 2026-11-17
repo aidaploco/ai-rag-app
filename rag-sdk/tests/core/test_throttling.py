@@ -3,7 +3,6 @@ import asyncio
 from opentelemetry import metrics as otel_metrics
 from opentelemetry.sdk.metrics import MeterProvider
 from opentelemetry.sdk.metrics.export import InMemoryMetricReader
-
 from rag_sdk.core.throttling import metered_throttled_function, throttled_function
 
 
@@ -65,10 +64,7 @@ async def test_metered_throttled_emits_metrics():
 
     data = reader.get_metrics_data()
     all_names = {
-        m.name
-        for rm in data.resource_metrics
-        for sm in rm.scope_metrics
-        for m in sm.metrics
+        m.name for rm in data.resource_metrics for sm in rm.scope_metrics for m in sm.metrics
     }
 
     parts = [p for p in work.__qualname__.split(".") if not p.startswith("<")]

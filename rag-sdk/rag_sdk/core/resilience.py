@@ -1,11 +1,13 @@
 import logging
-from collections.abc import Awaitable, Callable
+from collections.abc import Callable, Coroutine
 from functools import wraps
-from typing import ParamSpec, TypeVar
+from typing import Any, ParamSpec, TypeVar
 
 import inflect
 import tenacity
 from opentelemetry import metrics
+
+from rag_sdk.core.naming import metric_base
 
 P = ParamSpec("P")
 R = TypeVar("R")
@@ -30,31 +32,28 @@ def _get_retry_after(exc: BaseException) -> float | None:
     return None
 
 
-def _metric_base(fn: Callable) -> str:
-    parts = [p for p in fn.__qualname__.split(".") if not p.startswith("<")]
-    return ".".join(parts[-2:] if len(parts) >= 2 else parts)
-
-
 def with_retry(
     *exception_types: type[BaseException],
     max_attempts: int = 5,
     min_wait: float = 1.0,
     max_wait: float = 60.0,
-) -> Callable[[Callable[P, Awaitable[R]]], Callable[P, Awaitable[R]]]:
+) -> Callable[[Callable[P, Coroutine[Any, Any, R]]], Callable[P, Coroutine[Any, Any, R]]]:
     if not exception_types:
         raise ValueError("with_retry requires at least one exception type")
     meter = metrics.get_meter(__name__)
 
-    def decorator(fn: Callable[P, Awaitable[R]]) -> Callable[P, Awaitable[R]]:
+    def decorator(
+        fn: Callable[P, Coroutine[Any, Any, R]],
+    ) -> Callable[P, Coroutine[Any, Any, R]]:
         retry_counter = meter.create_counter(
-            f"{_metric_base(fn)}.retries",
+            f"{metric_base(fn)}.retries",
             description="Total retry attempts",
         )
 
         def _before_sleep(retry_state: tenacity.RetryCallState) -> None:
             exc = retry_state.outcome.exception() if retry_state.outcome else None
             wait_secs = retry_state.next_action.sleep if retry_state.next_action else 0.0
-            ordinal = _inflect.ordinal(retry_state.attempt_number)
+            ordinal = _inflect.ordinal(str(retry_state.attempt_number))
             logger.warning(
                 "%s: %s retry in %.1fs — %s",
                 fn.__qualname__,

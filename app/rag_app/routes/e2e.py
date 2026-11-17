@@ -1,6 +1,7 @@
 from fastapi import APIRouter, File, Form, Request, UploadFile
 
 from rag_app.models import E2EResponse, SearchResultModel
+from rag_app.parsing import read_pages
 from rag_app.schema import DocumentContext
 from rag_app.services.ingestion_service import IngestionService
 from rag_app.services.rag_service import RagService
@@ -14,8 +15,7 @@ async def e2e(
     file: UploadFile = File(...),
     query: str = Form(...),
 ) -> E2EResponse:
-    content = (await file.read()).decode("utf-8")
-    pages = [p.strip() for p in content.split("\n\n") if p.strip()]
+    pages = await read_pages(file)
     context = DocumentContext(filename=file.filename or "unknown")
 
     ingestion_service: IngestionService = request.app.state.ingestion_service
