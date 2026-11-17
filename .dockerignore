@@ -1,0 +1,19 @@
+.git
+.github
+.venv
+.env
+.env.*
+!.env.example
+**/__pycache__
+**/.DS_Store
+.pytest_cache
+.ruff_cache
+.mypy_cache
+.coverage
+.coverage.*
+coverage.xml
+*-coverage.xml
+# Not needed at runtime. app/eval/.cache alone holds the downloaded benchmark and 45 MB of vectors.
+app/eval
+app/tests
+rag-sdk/tests

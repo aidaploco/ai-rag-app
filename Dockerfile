@@ -1,6 +1,8 @@
 FROM python:3.13-slim
 
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+# Pinned, not :latest: an unpinned tool image makes the build unreproducible (CI pins its
+# actions by SHA for the same reason). Bump it by hand: Dependabot does not update this form.
+COPY --from=ghcr.io/astral-sh/uv:0.7.21 /uv /uvx /bin/
 
 WORKDIR /app
 
