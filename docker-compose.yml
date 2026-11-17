@@ -28,7 +28,7 @@ services:
   # Optional pgvector backend: `docker compose --profile pgvector up postgres`, then run the app
   # with VECTOR_STORE=pgvector and POSTGRES_DSN=postgresql://postgres:postgres@postgres:5432/postgres.
   postgres:
-    image: pgvector/pgvector:0.8.2-pg17
+    image: pgvector/pgvector:0.8.7-pg17
     profiles: ["pgvector"]
     environment:
       POSTGRES_PASSWORD: postgres
