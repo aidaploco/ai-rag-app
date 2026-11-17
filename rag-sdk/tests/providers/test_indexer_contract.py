@@ -17,6 +17,7 @@ import pytest
 from opensearchpy import AsyncOpenSearch
 from qdrant_client import AsyncQdrantClient
 from rag_sdk.providers.base import Document, Embedder, Indexer
+from rag_sdk.providers.faiss import FaissIndexer
 from rag_sdk.providers.opensearch import OpenSearchIndexer
 from rag_sdk.providers.pgvector import PgVectorIndexer
 from rag_sdk.providers.qdrant import QdrantIndexer
@@ -51,7 +52,7 @@ async def make_docs(*items: tuple[str, dict]) -> list[Document]:
 Backend = tuple[Indexer, str]  # indexer, index name
 
 
-@pytest.fixture(params=["qdrant", "pgvector", "opensearch"])
+@pytest.fixture(params=["qdrant", "pgvector", "opensearch", "faiss"])
 async def backend(request: pytest.FixtureRequest) -> AsyncIterator[Backend]:
     name = f"contract_{uuid.uuid4().hex[:12]}"
     embedder = HashEmbedder()
@@ -61,6 +62,12 @@ async def backend(request: pytest.FixtureRequest) -> AsyncIterator[Backend]:
         await indexer.create_or_update_index(name, {})
         yield indexer, name
         await client.close()
+        return
+
+    if request.param == "faiss":  # in-process: nothing to start, so it always runs
+        indexer = FaissIndexer(embedder, name)
+        await indexer.create_or_update_index(name, {})
+        yield indexer, name
         return
 
     if request.param == "opensearch":
