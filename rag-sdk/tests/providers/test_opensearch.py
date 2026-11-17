@@ -82,3 +82,27 @@ def test_invalid_index_names_are_rejected(bad):
         OpenSearchRetriever(None, bad, HashEmbedder())  # type: ignore[arg-type]
     with pytest.raises(ValueError, match="invalid index name"):
         OpenSearchIndexer(None, HashEmbedder(), bad)  # type: ignore[arg-type]
+
+
+async def test_lexical_retriever_ranks_the_rare_term_first_and_respects_filters(client, index):
+    indexer = OpenSearchIndexer(client, HashEmbedder(), index)
+    await indexer.create_or_update_index(index, {})
+    await indexer.upload_documents(
+        await make_docs(
+            ("the pump reports error E-4471 on startup", {"filename": "a.txt"}),
+            ("the pump is quiet and the pump is clean", {"filename": "a.txt"}),
+            ("an unrelated note about bread", {"filename": "b.txt"}),
+            ("error E-4471 also appears in this other file", {"filename": "b.txt"}),
+        )
+    )
+    lexical = indexer.create_lexical_searcher(index, top_k=10)
+    hits = await lexical.retrieve("E-4471")
+    assert {h.content for h in hits} == {
+        "the pump reports error E-4471 on startup",
+        "error E-4471 also appears in this other file",
+    }
+    assert all(h.content_id and h.score > 0 for h in hits)
+    only_b = await lexical.retrieve("E-4471", filters={"filename": "b.txt"})
+    assert [h.content for h in only_b] == ["error E-4471 also appears in this other file"]
+    assert await lexical.retrieve("zebra") == []
+    assert len(await lexical.retrieve("pump", top_k=1)) == 1

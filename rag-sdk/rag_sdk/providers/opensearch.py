@@ -90,6 +90,41 @@ class OpenSearchRetriever(Retriever):
         return [_to_result(h, 2.0 * float(h["_score"]) - 1.0) for h in response["hits"]["hits"]]
 
 
+class OpenSearchLexicalRetriever(Retriever):
+    """BM25 keyword search over ``content`` (default analyzer, default BM25 parameters).
+
+    The score is OpenSearch's raw BM25 score: unbounded, and not comparable with cosine
+    similarity. Combine it with a dense retriever through ``HybridRetriever``.
+    """
+
+    def __init__(self, client: AsyncOpenSearch, index: str, top_k: int = 5) -> None:
+        self._client = client
+        self._index = _index_name(index)
+        self._top_k = top_k
+
+    @trace()
+    async def retrieve(
+        self,
+        query: str,
+        filters: dict[str, Any] | None = None,
+        top_k: int | None = None,
+    ) -> SearchResults:
+        k = top_k if top_k is not None else self._top_k
+        response = await self._client.search(
+            index=self._index,
+            body={
+                "size": k,
+                "query": {
+                    "bool": {
+                        "must": {"match": {"content": {"query": query}}},
+                        "filter": _filter_clauses(filters),
+                    }
+                },
+            },
+        )
+        return [_to_result(h, float(h["_score"])) for h in response["hits"]["hits"]]
+
+
 class OpenSearchIndexer(Indexer):
     def __init__(self, client: AsyncOpenSearch, embedder: Embedder, index: str) -> None:
         self._client = client
@@ -186,3 +221,6 @@ class OpenSearchIndexer(Indexer):
 
     def create_searcher(self, index: str, top_k: int = 5) -> Retriever:
         return OpenSearchRetriever(self._client, index, self._embedder, top_k)
+
+    def create_lexical_searcher(self, index: str, top_k: int = 5) -> Retriever:
+        return OpenSearchLexicalRetriever(self._client, index, top_k)
