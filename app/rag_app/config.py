@@ -1,4 +1,6 @@
-from pydantic import field_validator
+from typing import Literal
+
+from pydantic import field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -9,6 +11,9 @@ class Config(BaseSettings):
     qdrant_url: str = "http://localhost:6333"
     qdrant_api_key: str | None = None
     qdrant_collection: str = "documents"
+    vector_store: Literal["qdrant", "pgvector"] = "qdrant"
+    postgres_dsn: str | None = None
+    pgvector_table: str = "documents"
     embedding_model: str = "text-embedding-3-small"
     embedding_dimensions: int = 1536
     chat_model: str = "gpt-4o-mini"
@@ -18,3 +23,9 @@ class Config(BaseSettings):
     def _blank_api_key_is_none(cls, value: object) -> object:
         # `.env.example` ships `QDRANT_API_KEY=` (blank); treat that as "no key", not "".
         return value or None
+
+    @model_validator(mode="after")
+    def _pgvector_needs_a_dsn(self) -> "Config":
+        if self.vector_store == "pgvector" and not self.postgres_dsn:
+            raise ValueError("POSTGRES_DSN is required when VECTOR_STORE=pgvector")
+        return self
