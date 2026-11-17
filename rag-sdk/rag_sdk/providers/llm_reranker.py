@@ -19,7 +19,9 @@ class LLMReranker(Reranker):
     """Reranks with a chat model: one call per query, no extra dependencies.
 
     Stateless by design. If the model's reply cannot be parsed the original order is kept (and a
-    warning is logged), so a bad reply degrades to "no rerank" and never loses or raises.
+    warning is logged), so a bad reply degrades to "no rerank" and never loses or raises. A
+    well-formed but empty ranking ("[]": the model found nothing relevant) also keeps the original
+    order but logs at INFO, so the two cases can be told apart.
     """
 
     def __init__(self, chatter: Chatter, max_passage_chars: int = 1000) -> None:
@@ -41,13 +43,29 @@ class LLMReranker(Reranker):
         )
         order = _parse_order(response.content, len(results))
         if order is None:
-            logger.warning("LLMReranker: unparseable reply, keeping original order")
+            if _has_array(response.content):
+                # A well-formed array with no usable number (e.g. "[]"): the model judged that no
+                # passage is relevant. Keeping the retrieval order is the right answer, not a fault.
+                logger.info("LLMReranker: empty ranking, keeping original order")
+            else:
+                logger.warning("LLMReranker: unparseable reply, keeping original order")
             order = list(range(len(results)))
         else:
             # Anything the model omitted keeps its original relative order after the ranked ones.
             ranked = set(order)
             order += [i for i in range(len(results)) if i not in ranked]
         return [results[i] for i in order[:top_n]]
+
+
+def _has_array(text: str) -> bool:
+    """True if the reply contains at least one well-formed JSON array (even an empty one)."""
+    for match in _ARRAY.finditer(text):
+        try:
+            if isinstance(json.loads(match.group()), list):
+                return True
+        except ValueError:
+            continue
+    return False
 
 
 def _parse_order(text: str, n: int) -> list[int] | None:

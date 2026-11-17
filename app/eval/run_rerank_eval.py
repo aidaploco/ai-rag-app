@@ -80,13 +80,21 @@ class MeteredChatter(Chatter):
         return response
 
 
-class WarningCounter(logging.Handler):
-    def __init__(self) -> None:
-        super().__init__(level=logging.WARNING)
+class LevelCounter(logging.Handler):
+    """Counts reranker log records of exactly one level.
+
+    INFO = a well-formed but empty ranking (the model found nothing relevant) and WARNING = an
+    unparseable reply. Both keep the retrieval order, so both score exactly like no rerank at all.
+    """
+
+    def __init__(self, level: int) -> None:
+        super().__init__(level=level)
+        self._exact = level
         self.count = 0
 
     def emit(self, record: logging.LogRecord) -> None:
-        self.count += 1
+        if record.levelno == self._exact:
+            self.count += 1
 
 
 def rank_key(rank: int | None) -> float:
@@ -125,8 +133,12 @@ async def main(args: argparse.Namespace) -> int:
 
     qdrant = AsyncQdrantClient(url=args.qdrant_url)
     openai_client = AsyncOpenAI(api_key=api_key)
-    handler = WarningCounter()
-    logging.getLogger(RERANKER_LOGGER).addHandler(handler)
+    empties = LevelCounter(logging.INFO)
+    unparseable = LevelCounter(logging.WARNING)
+    reranker_logger = logging.getLogger(RERANKER_LOGGER)
+    reranker_logger.setLevel(logging.INFO)  # INFO records are not emitted unless this is set
+    reranker_logger.addHandler(empties)
+    reranker_logger.addHandler(unparseable)
     try:
         if await qdrant.collection_exists(args.collection):
             raise SystemExit(f"collection {args.collection!r} already exists; refusing to reuse it")
@@ -167,7 +179,7 @@ async def main(args: argparse.Namespace) -> int:
                         openai_client, model=args.chat_model, call_options={"temperature": 0}
                     )
                 )
-                handler.count = 0
+                empties.count = unparseable.count = 0
                 reranked = RerankingRetriever(
                     dense, LLMReranker(chatter), retrieve_k=args.retrieve_k, top_n=max(KS)
                 )
@@ -185,7 +197,8 @@ async def main(args: argparse.Namespace) -> int:
                             "mean": round(statistics.fmean(lat), 3),
                             "p95": round(lat[int(0.95 * (len(lat) - 1))], 3),
                         },
-                        "unparseable_replies_kept_original_order": handler.count,
+                        "empty_ranking_replies": empties.count,
+                        "unparseable_replies": unparseable.count,
                         "movement_vs_dense": movement(dense_rows, rows),
                         "per_query": rows,
                     }
@@ -231,11 +244,13 @@ async def main(args: argparse.Namespace) -> int:
                 f"  run {r['run']}: moved {r['movement_vs_dense']['overall']}, "
                 f"tokens {r['prompt_tokens']}+{r['completion_tokens']}, "
                 f"latency {r['latency_s']}, "
-                f"fallbacks {r['unparseable_replies_kept_original_order']}"
+                f"empty rankings {r['empty_ranking_replies']}, "
+                f"unparseable {r['unparseable_replies']}"
             )
         return 0
     finally:
-        logging.getLogger(RERANKER_LOGGER).removeHandler(handler)
+        reranker_logger.removeHandler(empties)
+        reranker_logger.removeHandler(unparseable)
         await qdrant.close()
         await openai_client.close()
 

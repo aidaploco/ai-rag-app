@@ -51,11 +51,20 @@ async def test_top_n_cuts_after_ordering():
     assert await _rerank("[3, 2, 1]", top_n=2) == ["p3", "p2"]
 
 
-async def test_garbage_keeps_original_order_and_warns(caplog: pytest.LogCaptureFixture):
-    with caplog.at_level(logging.WARNING, logger="rag_sdk.providers.llm_reranker"):
+async def test_unparseable_reply_keeps_original_order_and_warns(caplog: pytest.LogCaptureFixture):
+    with caplog.at_level(logging.INFO, logger="rag_sdk.providers.llm_reranker"):
         assert await _rerank("I cannot rank these.") == ["p1", "p2", "p3"]
-        assert await _rerank("[9, 10]") == ["p1", "p2", "p3"]  # array with nothing valid
-    assert len(caplog.records) == 2
+    assert [r.levelno for r in caplog.records] == [logging.WARNING]
+
+
+@pytest.mark.parametrize("reply", ["[]", "```json\n[]\n```", "[9, 10]", "[0, -1]"])
+async def test_empty_ranking_keeps_original_order_and_logs_info_not_a_warning(
+    reply: str, caplog: pytest.LogCaptureFixture
+):
+    # The model returned a well-formed array with nothing usable: "no passage is relevant".
+    with caplog.at_level(logging.INFO, logger="rag_sdk.providers.llm_reranker"):
+        assert await _rerank(reply) == ["p1", "p2", "p3"]
+    assert [r.levelno for r in caplog.records] == [logging.INFO]
 
 
 async def test_returns_only_the_given_result_objects():

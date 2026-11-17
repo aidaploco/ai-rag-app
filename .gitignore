@@ -1,6 +1,9 @@
 # macOS
 .DS_Store
 
+# Downloaded public benchmark data and embedding caches (never committed)
+app/eval/.cache/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
