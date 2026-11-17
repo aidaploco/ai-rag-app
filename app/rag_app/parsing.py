@@ -13,6 +13,7 @@ input limit; real chunking is a separate piece of work.
 
 import io
 import re
+from collections.abc import Callable
 from dataclasses import dataclass
 from html.parser import HTMLParser
 from pathlib import PurePosixPath
@@ -21,6 +22,9 @@ from fastapi import HTTPException, UploadFile
 from starlette.concurrency import run_in_threadpool
 
 MAX_UPLOAD_BYTES = 10 * 1024 * 1024
+
+# Splits one parsed block of text into chunks. None means the default blank-line split.
+Chunker = Callable[[str], list[str]]
 
 _TEXT_EXTS = {".txt", ".text", ".md", ".markdown"}
 _HTML_EXTS = {".html", ".htm"}
@@ -144,8 +148,14 @@ def _docx_blocks(raw: bytes) -> list[tuple[str, int | None]]:
         raise UnparseableDocument("Could not read DOCX") from exc
 
 
-def parse_document(filename: str, content_type: str | None, raw: bytes) -> list[Page]:
-    """Parse bytes into numbered pages. Synchronous and CPU-bound: call from a thread."""
+def parse_document(
+    filename: str, content_type: str | None, raw: bytes, chunker: Chunker | None = None
+) -> list[Page]:
+    """Parse bytes into numbered pages. Synchronous and CPU-bound: call from a thread.
+
+    ``chunker`` replaces the blank-line split, applied per parsed block (so a PDF page keeps its
+    ``page_nr`` and ``chunk_idx`` still counts across the whole document).
+    """
     fmt = detect_format(filename, content_type)
     blocks: list[tuple[str, int | None]]
     if fmt == "text":
@@ -159,20 +169,20 @@ def parse_document(filename: str, content_type: str | None, raw: bytes) -> list[
 
     pages: list[Page] = []
     for text, page_nr in blocks:
-        for chunk in split_pages(text):
+        for chunk in chunker(text) if chunker else split_pages(text):
             pages.append(Page(text=chunk, chunk_idx=len(pages), page_nr=page_nr))
     if not pages and fmt != "text":
         raise UnparseableDocument("No extractable text (scanned or image-only document?)")
     return pages
 
 
-async def read_pages(file: UploadFile, filename: str) -> list[Page]:
+async def read_pages(file: UploadFile, filename: str, chunker: Chunker | None = None) -> list[Page]:
     """Read an upload and parse it, mapping failures to 413 / 415 / 422."""
     raw = await file.read(MAX_UPLOAD_BYTES + 1)
     if len(raw) > MAX_UPLOAD_BYTES:
         raise HTTPException(status_code=413, detail="File too large (limit 10 MiB)")
     try:
-        return await run_in_threadpool(parse_document, filename, file.content_type, raw)
+        return await run_in_threadpool(parse_document, filename, file.content_type, raw, chunker)
     except UnsupportedFormat as exc:
         raise HTTPException(status_code=415, detail=str(exc)) from None
     except UnparseableDocument as exc:

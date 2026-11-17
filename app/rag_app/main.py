@@ -13,6 +13,7 @@ from rag_sdk.workflow.ingestion import IngestionWorkflow
 from rag_sdk.workflow.rag import RagWorkflow
 
 from rag_app.config import Config
+from rag_app.parsing import Chunker
 from rag_app.routes.e2e import router as e2e_router
 from rag_app.routes.generate import router as generate_router
 from rag_app.routes.ingest import router as ingest_router
@@ -39,6 +40,26 @@ async def _build_indexer(
     )
 
 
+def build_chunker(config: Config) -> Chunker | None:
+    """The configured chunker, or None for the default blank-line split."""
+    if config.chunking == "paragraph":
+        return None
+    from rag_sdk.chunking import chunk_text
+    from rag_sdk.tokenizer import openai_token_counter
+
+    try:
+        counter = openai_token_counter(config.embedding_model)
+    except ValueError:
+        raise
+    except Exception as exc:  # e.g. tiktoken cannot fetch its vocabulary offline
+        raise RuntimeError(
+            f"CHUNKING=recursive needs the tokenizer for {config.embedding_model!r}; "
+            "it could not be loaded (offline without a warmed TIKTOKEN_CACHE_DIR?)"
+        ) from exc
+    max_tokens, overlap = config.chunk_max_tokens, config.chunk_overlap_tokens
+    return lambda text: chunk_text(text, counter, max_tokens=max_tokens, overlap_tokens=overlap)
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     config = Config()
@@ -63,6 +84,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 
         app.state.ingestion_service = IngestionService(workflow=ingestion_workflow, indexer=indexer)
         app.state.rag_service = RagService(workflow=rag_workflow)
+        app.state.chunker = build_chunker(config)
 
         await ingestion_workflow.ensure_index_exists()
         yield

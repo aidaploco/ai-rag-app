@@ -39,3 +39,30 @@ async def test_lifespan_creates_the_table_and_closes_the_pool(monkeypatch, dsn):
     finally:
         await verify.execute(f'DROP TABLE IF EXISTS "{table}"')
         await verify.close()
+
+
+async def test_lifespan_builds_the_chunker_when_recursive_is_configured(monkeypatch, dsn):
+    pytest.importorskip("tiktoken")
+    table = f"lifespan_{uuid.uuid4().hex[:10]}"
+    for key, value in {
+        "OPENAI_API_KEY": "test-key",
+        "VECTOR_STORE": "pgvector",
+        "POSTGRES_DSN": dsn,
+        "PGVECTOR_TABLE": table,
+        "CHUNKING": "recursive",
+        "CHUNK_MAX_TOKENS": "30",
+        "CHUNK_OVERLAP_TOKENS": "4",
+    }.items():
+        monkeypatch.setenv(key, value)
+
+    app = create_app()
+    verify = await asyncpg.connect(dsn)
+    try:
+        async with LifespanManager(app):
+            chunker = app.state.chunker
+            assert chunker is not None
+            chunks = chunker("A fairly ordinary sentence about retrieval. " * 40)
+            assert len(chunks) > 3
+    finally:
+        await verify.execute(f'DROP TABLE IF EXISTS "{table}"')
+        await verify.close()
