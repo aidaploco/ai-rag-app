@@ -1,0 +1,95 @@
+name: Evals
+
+# A retrieval regression check that makes real (paid, but tiny: about 120 embedding inputs) OpenAI
+# calls, so it is NOT part of the per-PR gate (ci.yml / ci-success). It is manual only:
+# Actions tab -> Evals -> Run workflow. Add a `schedule:` or a `pull_request: paths:` trigger here
+# only after deciding you want it to spend money on its own.
+#
+# Failing here means "look at it", not "the PR is bad": embedding models can change underneath you.
+# It needs the OPENAI_API_KEY repository secret (Settings -> Secrets and variables -> Actions).
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# `shell: bash` makes GitHub run steps as `bash -eo pipefail`. Without it the default is `bash -e`,
+# and a step that pipes into `tee` takes tee's exit status, so a failing command still shows green.
+defaults:
+  run:
+    shell: bash
+
+concurrency:
+  group: evals
+  cancel-in-progress: false
+
+jobs:
+  retrieval-baseline:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    services:
+      # A throwaway Qdrant for the scratch collection the runner creates and deletes. Its image has
+      # no curl for a health command, so the "Wait for Qdrant" step below polls it instead.
+      qdrant:
+        image: qdrant/qdrant:v1.18.1
+        ports:
+          - 6333:6333
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5.4.2
+        with:
+          python-version: "3.13"
+      - name: Install dependencies
+        run: uv sync --frozen
+
+      - name: Require the OpenAI key
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          if [ -z "$OPENAI_API_KEY" ]; then
+            echo "::error::the OPENAI_API_KEY repository secret is not set"
+            exit 1
+          fi
+
+      - name: Wait for Qdrant
+        run: |
+          for _ in $(seq 1 30); do
+            if curl -sf http://localhost:6333/healthz >/dev/null; then
+              echo "qdrant is up"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "::error::qdrant did not come up in time"
+          exit 1
+
+      - name: Run the dense baseline eval
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: >-
+          uv run python app/eval/run_eval.py
+          --qdrant-url http://localhost:6333
+          --out "$RUNNER_TEMP/baseline.json" | tee eval.txt
+
+      - name: Compare with the recorded baseline
+        run: >-
+          uv run python app/eval/check_baseline.py
+          --new "$RUNNER_TEMP/baseline.json"
+          --recorded app/eval/results/dense_baseline.json | tee compare.txt
+
+      - name: Job summary
+        if: always()
+        run: |
+          {
+            echo "### Retrieval baseline vs the recorded one"
+            echo '```'
+            cat compare.txt 2>/dev/null || echo "(the comparison did not run)"
+            echo '```'
+            echo "<details><summary>Eval run output</summary>"
+            echo
+            echo '```'
+            cat eval.txt 2>/dev/null || echo "(the eval did not produce output)"
+            echo '```'
+            echo "</details>"
+          } >> "$GITHUB_STEP_SUMMARY"
