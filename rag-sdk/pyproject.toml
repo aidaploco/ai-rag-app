@@ -23,6 +23,9 @@ pgvector = [
 qdrant = [
     "qdrant-client>=1.10",
 ]
+tokenizer = [
+    "tiktoken>=0.7",
+]
 
 [build-system]
 requires = ["setuptools>=68", "setuptools-scm>=8"]

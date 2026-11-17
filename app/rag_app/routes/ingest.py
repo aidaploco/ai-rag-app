@@ -15,7 +15,7 @@ async def ingest(
     filename: str = Form(default=""),
 ) -> IngestResponse:
     stored_name = filename or file.filename or "unknown"
-    pages = await read_pages(file, stored_name)
+    pages = await read_pages(file, stored_name, getattr(request.app.state, "chunker", None))
     context = DocumentContext(filename=stored_name)
     service: IngestionService = request.app.state.ingestion_service
     ingested, skipped = await service.ingest_with_dedup(context, pages)
