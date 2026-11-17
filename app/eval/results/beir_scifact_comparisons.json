@@ -1,0 +1,48 @@
+{
+  "metric": "ndcg@10",
+  "queries": 300,
+  "bm25_opensearch_minus_dense_exact": {
+    "mean_difference": -0.0704,
+    "ci95": [
+      -0.1105,
+      -0.0305
+    ],
+    "significant": true,
+    "queries_better": 56,
+    "queries_worse": 90,
+    "ties": 154
+  },
+  "hybrid_rrf_minus_dense_exact": {
+    "mean_difference": -0.0123,
+    "ci95": [
+      -0.0395,
+      0.0135
+    ],
+    "significant": false,
+    "queries_better": 52,
+    "queries_worse": 49,
+    "ties": 199
+  },
+  "dense_rerank_run1_minus_dense_opensearch": {
+    "mean_difference": 0.0388,
+    "ci95": [
+      0.0163,
+      0.0613
+    ],
+    "significant": true,
+    "queries_better": 55,
+    "queries_worse": 23,
+    "ties": 222
+  },
+  "dense_rerank_run2_minus_dense_opensearch": {
+    "mean_difference": 0.0413,
+    "ci95": [
+      0.0188,
+      0.0642
+    ],
+    "significant": true,
+    "queries_better": 55,
+    "queries_worse": 24,
+    "ties": 221
+  }
+}
