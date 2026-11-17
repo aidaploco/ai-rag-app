@@ -35,6 +35,7 @@ jobs:
     env:
       OPENAI_API_KEY: test-key-ci
       PGVECTOR_TEST_DSN: postgresql://postgres:postgres@localhost:5432/postgres
+      OPENSEARCH_TEST_URL: http://localhost:9200
     services:
       postgres:
         image: pgvector/pgvector:0.8.2-pg17
@@ -47,6 +48,22 @@ jobs:
           --health-interval 5s
           --health-timeout 3s
           --health-retries 10
+      # Throwaway single node; security is disabled for this CI service only.
+      opensearch:
+        image: opensearchproject/opensearch:2.19.0
+        env:
+          discovery.type: single-node
+          DISABLE_SECURITY_PLUGIN: "true"
+          DISABLE_INSTALL_DEMO_CONFIG: "true"
+          OPENSEARCH_JAVA_OPTS: -Xms512m -Xmx512m
+        ports:
+          - 9200:9200
+        options: >-
+          --health-cmd "curl -sf http://localhost:9200/_cluster/health"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 12
+          --health-start-period 20s
     steps:
       - uses: actions/checkout@v4
 
