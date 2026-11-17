@@ -7,3 +7,60 @@ target-version = "py311"
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]
+
+# Architecture contracts, checked in CI with `uv run lint-imports`.
+[tool.importlinter]
+root_packages = ["rag_sdk", "rag_app"]
+include_external_packages = true
+
+[[tool.importlinter.contracts]]
+name = "The SDK never depends on the app"
+type = "forbidden"
+source_modules = ["rag_sdk"]
+forbidden_modules = ["rag_app"]
+
+[[tool.importlinter.contracts]]
+name = "Vendor SDKs stay inside providers/ and tokenizer.py"
+type = "forbidden"
+source_modules = [
+    "rag_sdk.core",
+    "rag_sdk.workflow",
+    "rag_sdk.eval",
+    "rag_sdk.chunking",
+]
+forbidden_modules = ["openai", "qdrant_client", "asyncpg", "opensearchpy", "faiss", "tiktoken"]
+
+[[tool.importlinter.contracts]]
+name = "The SDK is layered: workflow and eval over providers over core"
+type = "layers"
+layers = ["rag_sdk.workflow | rag_sdk.eval", "rag_sdk.providers", "rag_sdk.core"]
+
+[[tool.importlinter.contracts]]
+name = "Concrete providers do not depend on each other"
+type = "independence"
+modules = [
+    "rag_sdk.providers.faiss",
+    "rag_sdk.providers.llm_reranker",
+    "rag_sdk.providers.openai",
+    "rag_sdk.providers.opensearch",
+    "rag_sdk.providers.pgvector",
+    "rag_sdk.providers.qdrant",
+]
+
+[[tool.importlinter.contracts]]
+name = "The chunker is pure (no providers, no workflow, no tokenizer)"
+type = "forbidden"
+source_modules = ["rag_sdk.chunking"]
+forbidden_modules = [
+    "rag_sdk.providers",
+    "rag_sdk.workflow",
+    "rag_sdk.eval",
+    "rag_sdk.tokenizer",
+]
+
+[[tool.importlinter.contracts]]
+name = "App routes go through services and never touch the SDK directly"
+type = "forbidden"
+source_modules = ["rag_app.routes"]
+forbidden_modules = ["rag_sdk"]
+allow_indirect_imports = true  # routes may reach the SDK through services; only direct imports fail

@@ -1,0 +1,42 @@
+# Version updates, weekly and grouped so a week of minor/patch bumps is one PR rather than a dozen.
+# Every Dependabot PR goes through the same ci-success gate as anything else.
+#
+# What this does and does not cover (checked against GitHub's docs and agent-chassis' PR history):
+#  - Dockerfile `FROM python:...` is bumped (agent-chassis got "python 3.13-slim to 3.15-slim").
+#    The alignment test then fails on that PR until the new Python is in the CI matrix: by design.
+#  - The uv image in `COPY --from=ghcr.io/astral-sh/uv:<tag>` was never bumped in agent-chassis'
+#    history (still 0.7.21), so treat it as manual.
+#  - docker-compose.yml images are covered by the docker-compose ecosystem below. A bump there must
+#    be mirrored in the CI `services:` image; test_ci_alignment.py fails until it is.
+#  - Images under `services:` in the workflows are not something Dependabot updates (no support
+#    found in GitHub's docs): bump those by hand when you change the versions you test against.
+version: 2
+updates:
+  - package-ecosystem: uv
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      minor-and-patch:
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ["*"]
+
+  # The python base image in the Dockerfile.
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
+
+  # The pinned images in docker-compose.yml.
+  - package-ecosystem: docker-compose
+    directory: /
+    schedule:
+      interval: weekly

@@ -45,6 +45,7 @@ include = ["rag_sdk*"]
 [dependency-groups]
 dev = [
     "faiss-cpu>=1.8",
+    "import-linter>=2.3",
     "mypy>=1.8",
     "opensearch-py[async]>=2.8",
     "opentelemetry-sdk>=1.20",
