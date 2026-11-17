@@ -29,10 +29,36 @@ A small, synthetic benchmark for comparing retrieval changes (reranking, hybrid 
   query embeddings. It first checks the dense arm reproduces `dense_baseline.json` per query and
   aborts if not. The rerank arm runs several times (LLM output varies); the spread, token cost,
   latency, fallback count and per-query rank movement go to `results/llm_rerank.json`.
+- `check_baseline.py` and `.github/workflows/evals.yml`: a manual regression check. The workflow
+  (Actions tab, Evals, Run workflow; it needs an `OPENAI_API_KEY` repository secret) re-runs
+  `run_eval.py` against a pinned throwaway Qdrant, and `check_baseline.py` compares the fresh run
+  with `results/dense_baseline.json`. It exits 1 if an overall metric dropped by more than 0.02
+  (declared in the code, not tuned), 2 if the two runs are not comparable (different k values,
+  corpus, queries or embedding model), and reports per-kind moves for information only (a kind has
+  6 to 12 queries, so one query moves it by 0.08 to 0.17). It is deliberately not part of the PR gate.
 
 ```
 OPENAI_API_KEY=... uv run python app/eval/run_eval.py --qdrant-url http://localhost:6333
 ```
+
+## Adjustments made after a first look
+
+The settings of each run were declared in code before it, with these exceptions, listed so the
+numbers are not read as more pre-registered than they are:
+
+- **The synthetic corpus was extended once after the first baseline.** The first version (60
+  paragraphs) left almost no headroom (a handful of one-position swaps), so it was extended to 90 by
+  a stated rule applied uniformly: two near-miss siblings per identifier and one same-vocabulary
+  distractor per paraphrase target. The rule was not tuned to individual misses, but it was chosen
+  after seeing that baseline.
+- **The chunking eval's overlap arms were resized before any scored run.** An offline shape check
+  showed overlap arms of 12 and 24 tokens could never overlap (overlap is whole sentences and these
+  paragraphs are 28 to 40 tokens), so they became 32 and 64 tokens.
+- **The SciFact rerank arm was run three times.** The first run reported empty-ranking replies as
+  "unparseable"; after the reranker was changed to log them separately it was re-run, twice. All
+  three runs of the same configuration are reported (0.7674, 0.7697, 0.7723 nDCG@10). The dense,
+  BM25 and hybrid arms were deterministic across these runs, apart from a few per-query rows of the
+  approximate dense index.
 
 ## Reading the baseline
 
