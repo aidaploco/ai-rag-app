@@ -66,8 +66,15 @@ how HNSW trades recall for speed at scale; that needs a much larger corpus.
 `results/hybrid_vs_dense.json` has per-arm and per-kind scores, `hybrid_vs_dense_movement`
 (improved / unchanged / worse queries by kind) and every query where any metric fell. On this
 corpus unweighted RRF is **worse overall than dense**: it fixes every identifier miss (BM25 alone
-is perfect there) but drags paraphrase queries down, because BM25 finds almost nothing when the
-query shares no vocabulary with its answer, and the corpus has same-vocabulary distractors by
-design. That is a property of equal-weight fusion on this query mix, not a general verdict on
-hybrid search. The configuration was not tuned afterwards. Untried options: weighted RRF, routing
-identifier-like queries to BM25, or an analyzer with stop-word removal.
+is perfect there: MRR 1.0 vs dense 0.80) but regresses 9 of 12 paraphrase queries.
+
+Mechanism, from the record: with RRF constant 60 and depth 20, a paragraph returned by both legs
+always outranks one returned by a single leg (2/80 beats 1/61). Each leg returns up to 22% of this
+90-paragraph corpus, and the default analyzer keeps stop words ("the", "what", "my"), so BM25
+matches many paragraphs on filler words; a lot of the overlap with the dense leg is chance. For 7
+of the 10 queries that got worse, no relevant paragraph was in the lexical top 10 at all (lexical
+paraphrase recall is 0.33 at 5 and 0.50 at 10), so the lexical leg only added noise. A small
+corpus, a deep depth and equal weights all amplify this; it is not a general verdict on hybrid
+search. The configuration was not tuned afterwards. Untried options, each a new recorded
+configuration: weighted RRF, routing identifier-like queries to BM25, a stop-word analyzer, a
+smaller depth.
