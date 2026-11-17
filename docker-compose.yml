@@ -25,5 +25,23 @@ services:
       qdrant:
         condition: service_healthy
 
+  # Optional pgvector backend: `docker compose --profile pgvector up postgres`, then run the app
+  # with VECTOR_STORE=pgvector and POSTGRES_DSN=postgresql://postgres:postgres@postgres:5432/postgres.
+  postgres:
+    image: pgvector/pgvector:0.8.2-pg17
+    profiles: ["pgvector"]
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
 volumes:
   qdrant_data:
+  pg_data:
