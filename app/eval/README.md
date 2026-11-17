@@ -49,8 +49,11 @@ The corpus is still small, so treat it as a regression check, not a benchmark.
 
 `results/llm_rerank.json` holds `dense`, `rerank_overall_spread` (min/max/mean across runs), and
 per-run `movement_vs_dense` (queries improved / unchanged / worse by first-relevant rank), token
-counts, latency and `unparseable_replies_kept_original_order` (a fallback scores exactly like
-dense, so it must be zero to trust a run). A delta inside the run spread is noise.
+counts, latency and the fallback counts (`empty_ranking_replies` and `unparseable_replies` in runs made
+after the logging fix; the committed `llm_rerank.json` predates it and has a single
+`unparseable_replies_kept_original_order` field, which was 0). A fallback keeps the retrieval order and
+scores exactly like dense, so check these before trusting a run. A delta inside the run spread is
+noise.
 
 Limits: this measures *reordering* only. `retrieve_k=20` is a fifth of this corpus, so every
 relevant paragraph was already a candidate; it says nothing about candidate recall on a larger
@@ -111,3 +114,61 @@ What the record shows (5 documents, 27 queries, 36 distinct anchors, one run):
 Limits: the documents are synthetic and built by concatenation; anchors are short phrases, so
 "contains the anchor" is weaker than "contains the full answer"; the corpus is tiny. The app
 default is unchanged (`CHUNKING=paragraph`); `recursive` is opt-in.
+
+## Public benchmark: BEIR SciFact
+
+`run_beir_eval.py` evaluates on a public dataset, **BEIR SciFact (test split)**: 5,183
+scientific abstracts, 300 claim queries, 339 relevance judgements. The data is
+downloaded at runtime into `app/eval/.cache` (git-ignored, SHA-256 checked) and is **never committed**;
+check the dataset's own licence before redistributing anything derived from it. Cite: Thakur et al.,
+*BEIR* (NeurIPS Datasets and Benchmarks 2021, arXiv:2104.08663), and Wadden et al., *Fact or Fiction: Verifying Scientific Claims* (EMNLP 2020), which introduced SciFact.
+
+Every setting is declared in the runner before the first scored run: one chunk per document
+(`"<title>. <text>"`), `text-embedding-3-small` at 1536 dimensions, unweighted RRF with k=60 and depth 100,
+the default OpenSearch analyzer. Results are in `results/beir_scifact.json`, per-query rows keyed by query ID.
+
+| Arm | nDCG@10 | recall@10 | recall@100 | MRR@10 |
+|---|---|---|---|---|
+| Dense, exact (brute-force cosine) | 0.731 | 0.8576 | 0.97 | 0.6979 |
+| Dense, OpenSearch HNSW | 0.731 | 0.8576 | 0.97 | 0.6979 |
+| BM25, OpenSearch | 0.6606 | 0.7843 | 0.8826 | 0.6283 |
+| Hybrid: BM25 + dense, unweighted RRF | 0.7186 | 0.8346 | 0.98 | 0.6887 |
+| Dense top-20 + LLM rerank, run 1 | 0.7697 | 0.8763 | — | 0.7389 |
+| Dense top-20 + LLM rerank, run 2 | 0.7723 | 0.8763 | — | 0.7433 |
+
+(The rerank arm returns 10 results, so it has no recall@100.)
+
+**How far to trust it**
+
+- *Calibration.* The BM25 arm scored 0.6606 against the published 0.665 (BEIR paper, Table 2), a difference of
+  -0.004. All arms were also scored with `pytrec_eval`, the TREC evaluator BEIR uses, and match to four
+  decimals (`crosscheck_pytrec_eval` in the record).
+- *Approximate vs exact.* OpenSearch's HNSW dense arm matches brute-force dense to four decimals
+  (mean top-10 overlap 0.995). Re-building the index changes a handful of per-query rows (4 to 6 of 300
+  between builds) and not the aggregates; BM25 and exact dense reproduce exactly.
+- *Is a gap real?* With 300 queries, a point or two is often noise, so `compare_arms.py` runs a paired bootstrap on
+  per-query nDCG@10 (`results/beir_scifact_comparisons.json`):
+  - BM25 minus dense: -0.070 (95% CI -0.111 to -0.030; better on 56, worse on 90, tied on 154). Dense is better, significantly.
+  - Hybrid minus dense: -0.012 (95% CI -0.040 to +0.013; better on 52, worse on 49, tied on 199). **Not distinguishable from dense**; on this
+    dataset unweighted fusion neither helped nor measurably hurt (it raised recall@100 from 0.97 to 0.98).
+  - Rerank minus dense: run 1 +0.039 (95% CI +0.016 to +0.061; better on 55, worse on 23, tied on 222); run 2 +0.041 (95% CI +0.019 to +0.064; better on 55, worse on 24, tied on 221). A real
+    improvement. An earlier run of the same configuration, made before the logging fix below, scored 0.7674.
+
+**Costs and caveats**
+
+- One-time embedding pass: 5,483 texts, 1,665,861 tokens, 23 sequential requests (about 3 cents at an
+  assumed price of $0.02 per million tokens; verify). The vectors are cached on disk, so later runs
+  send none.
+- Rerank: 300 calls and 1,280,797 prompt tokens per run with `gpt-4o-mini` at temperature 0 (about 20 cents per run at an
+  assumed price), 0.991 s mean latency per call.
+- `empty_ranking_replies` counts replies containing a well-formed array with no usable passage number
+  (39 and 38 of 300 queries in the two runs; the model found nothing that supports the claim). The
+  retrieval order was kept for those, so they score exactly like dense. `unparseable_replies` (0 in
+  both runs) counts replies with no array at all. An earlier run of the same configuration counted
+  both as "unparseable"; a diagnostic run on 60 queries found 7 such replies, and the 6 that were
+  printed were all a literal `[]`, which is why the reranker now logs the two cases separately.
+- In the record's `crosscheck_pytrec_eval`, the rerank arms' `recall_100` equals `recall_10` because those
+  arms return only 10 results; it is not comparable with the other arms' recall@100.
+- Reranking only reorders the top 20, so it cannot improve recall beyond what dense retrieved there.
+- SciFact queries are claims, not questions, and abstracts are short. Results on long documents, other query
+  styles or a larger corpus may differ. Nothing here was tuned against the test split.
