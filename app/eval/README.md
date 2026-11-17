@@ -13,6 +13,10 @@ A small, synthetic benchmark for comparing retrieval changes (reranking, hybrid 
   deletes the collection. It never reads `.env`, never sends a Qdrant API key, and refuses to use
   a collection name that already exists.
 - `results/dense_baseline.json`: the recorded dense-only baseline (see below).
+- `run_hybrid_eval.py`: dense vs BM25 vs hybrid (client-side RRF, `HybridRetriever`) on a scratch
+  OpenSearch index, vectors embedded once. Configuration (RRF constant 60, per-leg depth 20,
+  default analyzer) is fixed in the code before the run. It aborts unless the dense arm
+  reproduces `dense_baseline.json`. Result: `results/hybrid_vs_dense.json`.
 - `run_backend_compare.py`: loads the same vectors (embedded once) into Qdrant and pgvector (exact
   scan, and HNSW with iterative scan) and scores all three. It aborts unless Qdrant and
   pgvector-exact reproduce `dense_baseline.json` per query. Both stores must be throwaway: it
@@ -56,3 +60,21 @@ search) can only be judged against the dense arm, or on a larger, harder corpus.
 `queries_with_identical_top10_list` (how many queries returned the same top-10 as Qdrant). At 90
 rows an HNSW index is effectively exact, so this shows the stores agree on identical vectors, not
 how HNSW trades recall for speed at scale; that needs a much larger corpus.
+
+## Reading the hybrid result
+
+`results/hybrid_vs_dense.json` has per-arm and per-kind scores, `hybrid_vs_dense_movement`
+(improved / unchanged / worse queries by kind) and every query where any metric fell. On this
+corpus unweighted RRF is **worse overall than dense**: it fixes every identifier miss (BM25 alone
+is perfect there: MRR 1.0 vs dense 0.80) but regresses 9 of 12 paraphrase queries.
+
+Mechanism, from the record: with RRF constant 60 and depth 20, a paragraph returned by both legs
+always outranks one returned by a single leg (2/80 beats 1/61). Each leg returns up to 22% of this
+90-paragraph corpus, and the default analyzer keeps stop words ("the", "what", "my"), so BM25
+matches many paragraphs on filler words; a lot of the overlap with the dense leg is chance. For 7
+of the 10 queries that got worse, no relevant paragraph was in the lexical top 10 at all (lexical
+paraphrase recall is 0.33 at 5 and 0.50 at 10), so the lexical leg only added noise. A small
+corpus, a deep depth and equal weights all amplify this; it is not a general verdict on hybrid
+search. The configuration was not tuned afterwards. Untried options, each a new recorded
+configuration: weighted RRF, routing identifier-like queries to BM25, a stop-word analyzer, a
+smaller depth.
