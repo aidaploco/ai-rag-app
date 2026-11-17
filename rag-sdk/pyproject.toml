@@ -11,6 +11,9 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+faiss = [
+    "faiss-cpu>=1.8",
+]
 openai = [
     "openai>=1.0",
 ]
@@ -41,6 +44,7 @@ include = ["rag_sdk*"]
 
 [dependency-groups]
 dev = [
+    "faiss-cpu>=1.8",
     "mypy>=1.8",
     "opensearch-py[async]>=2.8",
     "opentelemetry-sdk>=1.20",
