@@ -21,7 +21,7 @@ def trace(span_name: str | None = None) -> Callable[[Callable[P, R]], Callable[P
             @wraps(fn)
             async def async_wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
                 with tracer.start_as_current_span(auto_name):
-                    return await fn(*args, **kwargs)  # type: ignore[return-value]
+                    return await fn(*args, **kwargs)  # type: ignore[misc]
 
             return async_wrapper  # type: ignore[return-value]
 

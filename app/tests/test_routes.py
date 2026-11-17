@@ -7,7 +7,6 @@ import pytest
 from asgi_lifespan import LifespanManager
 from fastapi import FastAPI
 from httpx import ASGITransport, AsyncClient
-
 from rag_app.main import create_app
 from rag_app.services.ingestion_service import IngestionService
 from rag_app.services.rag_service import RagService
@@ -51,12 +50,16 @@ def app(ingestion_service: IngestionService, rag_service: RagService) -> FastAPI
 @pytest.fixture
 async def client(app: FastAPI) -> AsyncIterator[AsyncClient]:
     async with LifespanManager(app) as manager:
-        async with AsyncClient(transport=ASGITransport(app=manager.app), base_url="http://test") as c:
+        async with AsyncClient(
+            transport=ASGITransport(app=manager.app), base_url="http://test"
+        ) as c:
             yield c
 
 
 class TestIngestRoute:
-    async def test_returns_counts(self, client: AsyncClient, ingestion_service: IngestionService) -> None:
+    async def test_returns_counts(
+        self, client: AsyncClient, ingestion_service: IngestionService
+    ) -> None:
         ingestion_service.ingest_with_dedup = AsyncMock(return_value=(3, 1))
         content = b"page one\n\npage two\n\npage three\n\nskipped"
         response = await client.post(
@@ -79,6 +82,16 @@ class TestIngestRoute:
         )
         assert response.status_code == 200
 
+    async def test_rejects_non_utf8_upload(
+        self, client: AsyncClient, ingestion_service: IngestionService
+    ) -> None:
+        response = await client.post(
+            "/ingest",
+            files={"file": ("bin.dat", BytesIO(b"\xff\xfe\x00bad"), "application/octet-stream")},
+        )
+        assert response.status_code == 415
+        ingestion_service.ingest_with_dedup.assert_not_awaited()
+
 
 class TestGenerateRoute:
     async def test_returns_answer_and_context(self, client: AsyncClient) -> None:
@@ -95,9 +108,7 @@ class TestGenerateRoute:
             "/generate",
             json={"query": "filtered query", "filters": {"filename": "doc.txt"}},
         )
-        rag_service.answer.assert_awaited_once_with(
-            "filtered query", {"filename": "doc.txt"}
-        )
+        rag_service.answer.assert_awaited_once_with("filtered query", {"filename": "doc.txt"})
 
 
 class TestE2ERoute:
@@ -120,3 +131,14 @@ class TestE2ERoute:
         assert body["pages_ingested"] == 2
         ingestion_service.ingest_with_dedup.assert_awaited_once()
         rag_service.answer.assert_awaited_once_with("summarise")
+
+    async def test_rejects_non_utf8_upload(
+        self, client: AsyncClient, ingestion_service: IngestionService
+    ) -> None:
+        response = await client.post(
+            "/",
+            files={"file": ("bin.dat", BytesIO(b"\xff\xfe\x00bad"), "application/octet-stream")},
+            data={"query": "q"},
+        )
+        assert response.status_code == 415
+        ingestion_service.ingest_with_dedup.assert_not_awaited()

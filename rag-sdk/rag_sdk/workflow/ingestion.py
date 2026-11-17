@@ -25,6 +25,8 @@ class IngestionWorkflow(Generic[TContext]):
 
     @trace()
     async def ingest(self, context: TContext, pages: list[str]) -> Documents:
+        if not pages:
+            return []
         vectors = await self._embedder.embed_chunks(pages)
         documents = [
             self._processor.process(

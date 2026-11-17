@@ -1,7 +1,6 @@
 from typing import Any
 
 import pytest
-
 from rag_sdk.providers.base import (
     Chatter,
     Document,
@@ -17,8 +16,8 @@ from rag_sdk.providers.base import (
     TokenUsage,
 )
 
-
 # --- ABC instantiation guards ---
+
 
 def test_embedder_cannot_be_instantiated():
     with pytest.raises(TypeError):
@@ -42,6 +41,7 @@ def test_indexer_cannot_be_instantiated():
 
 # --- Stub implementations (also serve as usage examples) ---
 
+
 class StubEmbedder(Embedder):
     @property
     def dimensions(self) -> int:
@@ -50,9 +50,7 @@ class StubEmbedder(Embedder):
     async def embed(self, text: str) -> list[float]:
         return [0.1] * self.dimensions
 
-    async def embed_chunks(
-        self, texts: list[str], batch_size: int = 2048
-    ) -> list[list[float]]:
+    async def embed_chunks(self, texts: list[str], batch_size: int = 2048) -> list[list[float]]:
         return [[0.1] * self.dimensions for _ in texts]
 
 
@@ -60,16 +58,12 @@ class StubChatter(Chatter):
     async def generate(self, prompt: Prompt) -> GeneratedResponse:
         return GeneratedResponse(
             content="stub response",
-            token_usage=TokenUsage(
-                prompt_tokens=10, completion_tokens=5, total_tokens=15
-            ),
+            token_usage=TokenUsage(prompt_tokens=10, completion_tokens=5, total_tokens=15),
         )
 
 
 class StubRetriever(Retriever):
-    async def retrieve(
-        self, query: str, filters: dict[str, Any] | None = None
-    ) -> SearchResults:
+    async def retrieve(self, query: str, filters: dict[str, Any] | None = None) -> SearchResults:
         return [SearchResult(content="stub result", score=0.9, metadata={})]
 
 
@@ -91,6 +85,7 @@ class StubIndexer(Indexer):
 
 
 # --- Stub behaviour tests ---
+
 
 async def test_embedder_returns_vector_of_correct_dimension():
     emb = StubEmbedder()

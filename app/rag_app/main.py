@@ -52,8 +52,12 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     app.state.ingestion_service = IngestionService(workflow=ingestion_workflow, indexer=indexer)
     app.state.rag_service = RagService(workflow=rag_workflow)
 
-    await ingestion_workflow.ensure_index_exists()
-    yield
+    try:
+        await ingestion_workflow.ensure_index_exists()
+        yield
+    finally:
+        await qdrant_client.close()
+        await openai_client.close()
 
 
 def create_app(lifespan=lifespan) -> FastAPI:

@@ -6,9 +6,7 @@ from rag_sdk.providers.openai import OpenAIChatter, OpenAIEmbedder
 
 def _make_embed_response(embeddings: list[list[float]]) -> MagicMock:
     response = MagicMock()
-    response.data = [
-        MagicMock(embedding=emb, index=i) for i, emb in enumerate(embeddings)
-    ]
+    response.data = [MagicMock(embedding=emb, index=i) for i, emb in enumerate(embeddings)]
     return response
 
 
@@ -31,12 +29,8 @@ def _mock_client(
 ) -> MagicMock:
     client = MagicMock()
     if embedding is not None:
-        client.embeddings.create = AsyncMock(
-            return_value=_make_embed_response([embedding])
-        )
-    client.chat.completions.create = AsyncMock(
-        return_value=_make_chat_response(chat_content)
-    )
+        client.embeddings.create = AsyncMock(return_value=_make_embed_response([embedding]))
+    client.chat.completions.create = AsyncMock(return_value=_make_chat_response(chat_content))
     return client
 
 
@@ -50,9 +44,7 @@ async def test_embed_returns_vector():
     embedder = OpenAIEmbedder(client=client, dimensions=3)
     result = await embedder.embed("hello")
     assert result == [0.1, 0.2, 0.3]
-    client.embeddings.create.assert_called_once_with(
-        model="text-embedding-3-small", input="hello"
-    )
+    client.embeddings.create.assert_called_once_with(model="text-embedding-3-small", input="hello")
 
 
 async def test_embed_chunks_returns_one_vector_per_text():

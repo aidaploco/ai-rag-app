@@ -16,9 +16,7 @@ class SimpleSchemaExtension(RagSchemaExtension[DocContext]):
     def get_schema_extension(self) -> Schema:
         return {"extra_field": "string"}
 
-    def get_document_extension(
-        self, content: str, context: DocContext
-    ) -> dict[str, Any]:
+    def get_document_extension(self, content: str, context: DocContext) -> dict[str, Any]:
         return {"metadata": {"source": context.source}}
 
 
@@ -30,9 +28,7 @@ class StubEmbedder(Embedder):
     async def embed(self, text: str) -> list[float]:
         return [0.1, 0.2, 0.3]
 
-    async def embed_chunks(
-        self, texts: list[str], batch_size: int = 2048
-    ) -> list[list[float]]:
+    async def embed_chunks(self, texts: list[str], batch_size: int = 2048) -> list[list[float]]:
         return [[0.1, 0.2, 0.3] for _ in texts]
 
 
@@ -40,8 +36,10 @@ class CapturingIndexer(Indexer):
     def __init__(self) -> None:
         self.uploaded: Documents = []
         self.created_index: str | None = None
+        self.upload_calls = 0
 
     async def upload_documents(self, docs: Documents) -> None:
+        self.upload_calls += 1
         self.uploaded.extend(docs)
 
     async def create_or_update_index(self, name: str, schema: Schema) -> None:
@@ -105,9 +103,7 @@ async def test_base_fields_not_overwritten_by_extension():
         def get_schema_extension(self) -> Schema:
             return {}
 
-        def get_document_extension(
-            self, content: str, context: DocContext
-        ) -> dict[str, Any]:
+        def get_document_extension(self, content: str, context: DocContext) -> dict[str, Any]:
             return {"content_id": "hijacked", "metadata": {}}
 
     indexer = CapturingIndexer()
@@ -126,3 +122,30 @@ async def test_ensure_index_exists_calls_indexer():
     indexer = CapturingIndexer()
     await _make_workflow(indexer).ensure_index_exists()
     assert indexer.created_index == "test-index"
+
+
+async def test_extension_cannot_alter_content_vector():
+    class VectorExtension(RagSchemaExtension[DocContext]):
+        def get_schema_extension(self) -> Schema:
+            return {}
+
+        def get_document_extension(self, content: str, context: DocContext) -> dict[str, Any]:
+            return {"content_vector": [9.0, 9.0], "content": "hijacked", "metadata": {}}
+
+    indexer = CapturingIndexer()
+    wf = IngestionWorkflow(
+        embedder=StubEmbedder(),
+        indexer=indexer,
+        index="test-index",
+        schema_extension=VectorExtension(),
+    )
+    docs = await wf.ingest(DocContext("x.pdf"), ["hello"])
+    assert docs[0].content_vector == [0.1, 0.2, 0.3]
+    assert docs[0].content == "hello"
+
+
+async def test_ingest_empty_pages_does_not_touch_indexer():
+    indexer = CapturingIndexer()
+    docs = await _make_workflow(indexer).ingest(DocContext("a.pdf"), [])
+    assert docs == []
+    assert indexer.upload_calls == 0

@@ -47,20 +47,20 @@ class QdrantRetriever(Retriever):
     async def retrieve(self, query: str, filters: dict[str, Any] | None = None) -> SearchResults:
         query_vector = await self._embedder.embed(query)
         qdrant_filter = _build_filter(filters) if filters else None
-        hits = await self._client.search(
+        response = await self._client.query_points(
             collection_name=self._collection,
-            query_vector=query_vector,
+            query=query_vector,
             limit=self._top_k,
             query_filter=qdrant_filter,
             **self._call_options,
         )
         return [
             SearchResult(
-                content=hit.payload["content"],
+                content=(hit.payload or {}).get("content", ""),
                 score=hit.score,
-                metadata={k: v for k, v in hit.payload.items() if k != "content"},
+                metadata={k: v for k, v in (hit.payload or {}).items() if k != "content"},
             )
-            for hit in hits
+            for hit in response.points
         ]
 
 
@@ -102,12 +102,6 @@ class QdrantIndexer(Indexer):
         )
 
     async def has_document(self, filter: dict[str, Any]) -> bool:
-        if "content_id" in filter:
-            results = await self._client.retrieve(
-                collection_name=self._collection,
-                ids=[filter["content_id"]],
-            )
-            return len(results) > 0
         return await self.count_documents(filter) > 0
 
     async def count_documents(self, filter: dict[str, Any]) -> int:
@@ -115,6 +109,7 @@ class QdrantIndexer(Indexer):
             results = await self._client.retrieve(
                 collection_name=self._collection,
                 ids=[filter["content_id"]],
+                with_payload=False,
             )
             return len(results)
         result = await self._client.count(
@@ -127,6 +122,7 @@ class QdrantIndexer(Indexer):
         results = await self._client.retrieve(
             collection_name=self._collection,
             ids=content_ids,
+            with_payload=False,
         )
         return {str(r.id) for r in results}
 

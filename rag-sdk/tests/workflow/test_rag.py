@@ -17,9 +17,7 @@ class StubRetriever(Retriever):
         self._results = results
         self.last_filters: dict[str, Any] | None = None
 
-    async def retrieve(
-        self, query: str, filters: dict[str, Any] | None = None
-    ) -> SearchResults:
+    async def retrieve(self, query: str, filters: dict[str, Any] | None = None) -> SearchResults:
         self.last_filters = filters
         return self._results
 
@@ -60,9 +58,7 @@ async def test_rag_includes_retrieved_context_in_result():
         retriever=StubRetriever(results),
         chatter=CapturingChatter(),
     )
-    result = await workflow.rag(
-        query="q", user_template="{question}", system_template="{context}"
-    )
+    result = await workflow.rag(query="q", user_template="{question}", system_template="{context}")
     assert len(result.context) == 2
 
 
@@ -99,9 +95,7 @@ async def test_rag_joins_multiple_results_with_newlines():
         retriever=StubRetriever([_result("first"), _result("second")]),
         chatter=chatter,
     )
-    await workflow.rag(
-        query="q", user_template="{question}", system_template="{context}"
-    )
+    await workflow.rag(query="q", user_template="{question}", system_template="{context}")
     assert "first\n\nsecond" in chatter.last_prompt.system
 
 
@@ -122,7 +116,5 @@ async def test_rag_includes_token_usage_in_result():
         retriever=StubRetriever([]),
         chatter=CapturingChatter(),
     )
-    result = await workflow.rag(
-        query="q", user_template="{question}", system_template="{context}"
-    )
+    result = await workflow.rag(query="q", user_template="{question}", system_template="{context}")
     assert result.token_usage.total_tokens == 15

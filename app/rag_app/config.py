@@ -1,3 +1,4 @@
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -11,3 +12,9 @@ class Config(BaseSettings):
     embedding_model: str = "text-embedding-3-small"
     embedding_dimensions: int = 1536
     chat_model: str = "gpt-4o-mini"
+
+    @field_validator("qdrant_api_key", mode="before")
+    @classmethod
+    def _blank_api_key_is_none(cls, value: object) -> object:
+        # `.env.example` ships `QDRANT_API_KEY=` (blank); treat that as "no key", not "".
+        return value or None
