@@ -13,6 +13,10 @@ A small, synthetic benchmark for comparing retrieval changes (reranking, hybrid 
   deletes the collection. It never reads `.env`, never sends a Qdrant API key, and refuses to use
   a collection name that already exists.
 - `results/dense_baseline.json`: the recorded dense-only baseline (see below).
+- `run_chunking_eval.py`: compares chunking strategies on long, blank-line-free documents derived
+  from the corpus (18 paragraphs joined by spaces, about 450 tokens each), scored by anchor
+  containment at equal token budgets (`rag_sdk.eval.anchors`). In-memory Qdrant; arms, budgets and
+  depth are declared in code before the run. Result: `results/chunking.json`.
 - `run_hybrid_eval.py`: dense vs BM25 vs hybrid (client-side RRF, `HybridRetriever`) on a scratch
   OpenSearch index, vectors embedded once. Configuration (RRF constant 60, per-leg depth 20,
   default analyzer) is fixed in the code before the run. It aborts unless the dense arm
@@ -78,3 +82,32 @@ corpus, a deep depth and equal weights all amplify this; it is not a general ver
 search. The configuration was not tuned afterwards. Untried options, each a new recorded
 configuration: weighted RRF, routing identifier-like queries to BM25, a stop-word analyzer, a
 smaller depth.
+
+## Reading the chunking result
+
+Labels here are *anchors* (phrases that answer a query), not content IDs, because chunking changes
+chunk text and so changes IDs. A chunk finds an anchor if it contains it. Arms are compared at
+equal token budgets (256, 512, 1024 tokens of retrieved context): only whole chunks that fit count,
+so large chunks cannot win by returning a whole document.
+
+What the record shows (5 documents, 27 queries, 36 distinct anchors, one run):
+
+- **Any chunking beats the current blank-line split on this kind of text.** These documents have
+  no blank lines, so the default makes one ~450-token chunk per document. At a 512-token budget
+  `recursive_64` found the answer on 14 more queries than the default and was worse on none. (At
+  256 tokens the gap is 25 queries, but that one is true by construction: the default's ~450-token
+  chunk cannot fit a 256-token budget, so it scores 0.)
+- **Recursive vs naive fixed windows is a small difference.** `recursive_64` was better on 5
+  queries and worse on 1 at 256 tokens (2 and 1 at 512). Fixed windows cut 1 of 36 anchors in half
+  at a boundary; the recursive chunker cut none. With 27 queries that is a hint, not a result.
+- **Overlap showed no demonstrated benefit** (better on 2, worse on 1 at 256; 1 and 1 at 512).
+  Overlap is whole sentences only, so on this corpus it needs a budget of at least one paragraph.
+- **Smaller chunks (64 tokens) did better than 128** at the small budgets, as expected: more
+  chunks fit.
+- **Do not compare MRR across chunk sizes.** The recorded `mrr` is the rank of the first chunk
+  containing an anchor and ignores size, so the 5 huge chunks of the default score about as well as
+  anything. The budgeted recall is the comparison to use.
+
+Limits: the documents are synthetic and built by concatenation; anchors are short phrases, so
+"contains the anchor" is weaker than "contains the full answer"; the corpus is tiny. The app
+default is unchanged (`CHUNKING=paragraph`); `recursive` is opt-in.
